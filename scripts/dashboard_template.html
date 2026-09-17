@@ -1,0 +1,351 @@
+<title>Options Flow Deck</title>
+<style>
+  :root{
+    color-scheme: light;
+    --ground:        #f9f9f7;
+    --surface:       #fcfcfb;
+    --surface-raised:#ffffff;
+    --ink-primary:   #0b0b0b;
+    --ink-secondary: #52514e;
+    --ink-muted:     #898781;
+    --gridline:      #e1e0d9;
+    --baseline:      #c3c2b7;
+    --border:        rgba(11,11,11,0.10);
+    --call:          #2a78d6;
+    --call-soft:     #cde2fb;
+    --put:           #eb6834;
+    --put-soft:      #fbdcce;
+    --accent:        #2a78d6;
+    --font-display:  "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    --font-body:     "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --ground:#0d0d0d; --surface:#1a1a19; --surface-raised:#212120;
+      --ink-primary:#ffffff; --ink-secondary:#c3c2b7; --ink-muted:#898781;
+      --gridline:#2c2c2a; --baseline:#383835; --border:rgba(255,255,255,0.10);
+      --call:#3987e5; --call-soft:#184f95; --put:#d95926; --put-soft:#6b3013; --accent:#3987e5;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --ground:#0d0d0d; --surface:#1a1a19; --surface-raised:#212120;
+    --ink-primary:#ffffff; --ink-secondary:#c3c2b7; --ink-muted:#898781;
+    --gridline:#2c2c2a; --baseline:#383835; --border:rgba(255,255,255,0.10);
+    --call:#3987e5; --call-soft:#184f95; --put:#d95926; --put-soft:#6b3013; --accent:#3987e5;
+  }
+
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--ground); color: var(--ink-primary); font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding-inline: 20px; padding-block: 24px 64px; }
+
+  header.top {
+    position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10;
+    background: color-mix(in srgb, var(--ground) 88%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    margin-inline: calc(-1 * max(20px, (100% - 1180px) / 2 + 20px));
+    padding-inline: max(20px, (100% - 1180px) / 2 + 20px);
+  }
+  .top-inner { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 20px; padding-block: 14px; }
+  .brand { font-family: var(--font-display); font-weight: 600; font-size: 15px; letter-spacing: 0.02em; white-space: nowrap; }
+  .brand .dot { color: var(--call); }
+  .top-meta { margin-left: auto; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .badge {
+    font-family: var(--font-body); font-size: 11px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
+    padding: 4px 9px; border-radius: 999px; background: var(--call-soft); color: var(--call); white-space: nowrap;
+  }
+
+  .selector { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 22px; }
+  .selector::-webkit-scrollbar { height: 6px; }
+  .selector::-webkit-scrollbar-thumb { background: var(--gridline); border-radius: 3px; }
+  .run-btn {
+    font-family: var(--font-display); font-size: 12px; white-space: nowrap;
+    padding: 7px 12px; border-radius: 8px; border: 1px solid var(--border);
+    background: var(--surface); color: var(--ink-secondary); cursor: pointer; flex: none;
+  }
+  .run-btn:hover { border-color: var(--call); }
+  .run-btn.active { background: var(--call); color: white; border-color: var(--call); }
+
+  h1.title { font-family: var(--font-body); font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 22px 0 4px; text-wrap: balance; }
+  .subtitle { color: var(--ink-secondary); font-size: 13.5px; margin: 0 0 18px; max-width: 72ch; line-height: 1.5; }
+  .subtitle code { font-family: var(--font-display); background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 1px 5px; font-size: 12px; }
+
+  .kpi-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 28px; }
+  .kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; min-width: 0; }
+  .kpi-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-muted); margin-bottom: 8px; }
+  .kpi-value { font-family: var(--font-display); font-size: 20px; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .kpi-value.call { color: var(--call); }
+  .kpi-value.put { color: var(--put); }
+  .kpi-sub { font-size: 11.5px; color: var(--ink-muted); margin-top: 4px; font-family: var(--font-display); }
+  .kpi-sub.up::before { content: "▲ "; }
+  .kpi-sub.down::before { content: "▼ "; }
+
+  .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px 20px; margin-bottom: 20px; }
+  .panel-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+  .panel h2 { font-size: 14.5px; font-weight: 700; margin: 0; }
+  .panel-note { font-size: 12px; color: var(--ink-muted); }
+  .legend { display: flex; gap: 14px; font-size: 12px; color: var(--ink-secondary); }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .swatch { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+  .swatch.call { background: var(--call); }
+  .swatch.put { background: var(--put); }
+  .swatch.vol { background: var(--accent); }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .empty-note { color: var(--ink-muted); font-size: 13px; padding: 10px 2px; }
+
+  .barlist { display: flex; flex-direction: column; gap: 9px; }
+  .barrow { display: grid; grid-template-columns: 68px 1fr; align-items: center; gap: 10px; }
+  .barrow .rowlabel { font-family: var(--font-display); font-size: 12px; color: var(--ink-secondary); text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .bartrack { position: relative; display: flex; flex-direction: column; gap: 3px; }
+  .bar-bg { position: relative; height: 13px; background: var(--gridline); border-radius: 3px; overflow: hidden; }
+  .bar-fill { position: absolute; top: 0; left: 0; bottom: 0; border-radius: 3px; min-width: 2px; }
+  .bar-fill.call { background: var(--call); }
+  .bar-fill.put { background: var(--put); }
+  .bar-fill.vol { background: var(--accent); }
+  .bar-val { position: absolute; top: 50%; transform: translateY(-50%); font-family: var(--font-display); font-size: 10.5px; font-variant-numeric: tabular-nums; color: var(--ink-primary); white-space: nowrap; padding-inline: 5px; }
+  .bar-delta { font-family: var(--font-display); font-size: 10px; color: var(--ink-muted); margin-left: 6px; }
+
+  table.moves { width: 100%; border-collapse: collapse; font-family: var(--font-display); font-size: 12.5px; }
+  table.moves th { text-align: left; font-family: var(--font-body); font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-muted); font-weight: 600; padding: 0 10px 8px; border-bottom: 1px solid var(--gridline); }
+  table.moves td { padding: 7px 10px; border-bottom: 1px solid var(--gridline); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  table.moves tbody tr:last-child td { border-bottom: none; }
+  table.moves td.num { text-align: right; }
+  .type-chip { display: inline-block; font-family: var(--font-body); font-size: 10.5px; font-weight: 700; padding: 1px 6px; border-radius: 4px; }
+  .type-chip.C { background: var(--call-soft); color: var(--call); }
+  .type-chip.P { background: var(--put-soft); color: var(--put); }
+  .scrollbox { max-height: 520px; overflow-y: auto; padding-right: 4px; }
+  .scrollbox::-webkit-scrollbar { width: 8px; }
+  .scrollbox::-webkit-scrollbar-thumb { background: var(--gridline); border-radius: 4px; }
+
+  footer { color: var(--ink-muted); font-size: 11.5px; text-align: center; margin-top: 30px; line-height: 1.6; }
+
+  @media (max-width: 760px) {
+    .kpi-row { grid-template-columns: repeat(2, 1fr); }
+    .grid-2 { grid-template-columns: 1fr; }
+    .barrow { grid-template-columns: 54px 1fr; }
+    table.moves { display: block; overflow-x: auto; }
+  }
+</style>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<header class="top">
+  <div class="top-inner">
+    <div class="brand">BTC<span class="dot">·</span>OPTIONS FLOW DECK</div>
+    <div class="top-meta"><span class="badge" id="run-badge">—</span></div>
+  </div>
+</header>
+
+<div class="wrap">
+  <h1 class="title">Deribit BTC Options — Volume &amp; Open Interest</h1>
+  <p class="subtitle" id="subtitle">Lädt…</p>
+
+  <div class="selector" id="run-selector"></div>
+
+  <div class="kpi-row" id="kpi-row"></div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <h2>Open Interest nach Expiration</h2>
+      <div class="legend"><span><i class="swatch call"></i>Calls</span><span><i class="swatch put"></i>Puts</span></div>
+    </div>
+    <div class="barlist" id="chart-expiry-oi"></div>
+  </div>
+
+  <div class="grid-2">
+    <div class="panel">
+      <div class="panel-head"><h2>24h-Volumen nach Expiration</h2></div>
+      <div class="barlist" id="chart-expiry-vol"></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><h2>Put/Call &amp; Marktbreite</h2></div>
+      <div id="chart-pc"></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <h2>Open Interest nach Strike (alle Expiries)</h2>
+      <span class="panel-note" id="strike-note">—</span>
+    </div>
+    <div class="legend" style="margin-bottom:12px;"><span><i class="swatch call"></i>Calls</span><span><i class="swatch put"></i>Puts</span></div>
+    <div class="barlist scrollbox" id="chart-strike-oi"></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <h2 id="movers-title">Top Movers</h2>
+      <span class="panel-note" id="movers-note">—</span>
+    </div>
+    <table class="moves">
+      <thead><tr id="movers-head"></tr></thead>
+      <tbody id="movers-body"></tbody>
+    </table>
+  </div>
+
+  <footer>
+    Datenquelle: Deribit Public API (<code style="font-family:var(--font-display)">get_book_summary_by_currency</code>), geholt über GitHub Actions.
+    Volumen ist die rollierende 24h-Kontraktzahl der API, nicht exakt „seit 00:00 UTC“.<br>
+    Repo: 8figuresync/deribit-btc-options-tracker — wird bei jedem Tracker-Lauf neu erzeugt.
+  </footer>
+</div>
+
+<script>
+const SNAPSHOTS = __SNAPSHOTS_JSON__;
+let selectedIndex = SNAPSHOTS.length - 1;
+
+function fmt(n, decimals) {
+  if (n === null || n === undefined) return "–";
+  const d = decimals === undefined ? (Number.isInteger(n) ? 0 : 2) : decimals;
+  return n.toLocaleString("de-DE", { minimumFractionDigits: d, maximumFractionDigits: d });
+}
+function fmtSigned(n, decimals) {
+  if (n === null || n === undefined) return null;
+  const sign = n > 0 ? "+" : "";
+  return sign + fmt(n, decimals);
+}
+function fmtCompactUsd(n) {
+  if (n >= 1e6) return "$" + (n/1e6).toFixed(1) + "M";
+  if (n >= 1e3) return "$" + (n/1e3).toFixed(0) + "k";
+  return "$" + fmt(n, 0);
+}
+function berlinTime(iso) {
+  return new Intl.DateTimeFormat("de-DE", { timeZone: "Europe/Berlin", day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }).format(new Date(iso));
+}
+function utcTime(iso) {
+  return new Intl.DateTimeFormat("de-DE", { timeZone: "UTC", day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }).format(new Date(iso)) + " UTC";
+}
+
+function renderSelector() {
+  document.getElementById("run-selector").innerHTML = SNAPSHOTS.map((s, i) => `
+    <button class="run-btn ${i === selectedIndex ? "active" : ""}" data-i="${i}">${berlinTime(s.timestamp_utc)}</button>
+  `).join("");
+  document.querySelectorAll(".run-btn").forEach(btn => {
+    btn.addEventListener("click", () => { selectedIndex = parseInt(btn.dataset.i, 10); renderSelector(); render(); });
+  });
+}
+
+function barRow(label, segments, max) {
+  const track = segments.map(seg => {
+    const pct = max > 0 ? Math.max(seg.value > 0 ? 1.5 : 0, (seg.value / max) * 100) : 0;
+    const showInside = pct > 22;
+    const deltaTxt = (seg.delta !== undefined && seg.delta !== null && seg.delta !== 0)
+      ? `<span class="bar-delta">${fmtSigned(seg.delta,0)}</span>` : "";
+    return `<div class="bar-bg">
+      <div class="bar-fill ${seg.cls}" style="width:${pct}%"></div>
+      <span class="bar-val" style="${showInside ? "left:6px;color:#fff;mix-blend-mode:difference;" : `left:calc(${pct}% + 6px);`}">${seg.label}${showInside ? "" : deltaTxt}</span>
+    </div>`;
+  }).join("");
+  return `<div class="barrow"><div class="rowlabel">${label}</div><div class="bartrack">${track}</div></div>`;
+}
+
+function kpiSubDelta(delta, decimals, unit) {
+  if (delta === null || delta === undefined) return "";
+  if (delta === 0) return `<div class="kpi-sub">± 0 seit letztem Lauf</div>`;
+  const cls = delta > 0 ? "up" : "down";
+  return `<div class="kpi-sub ${cls}">${fmtSigned(Math.abs(delta) * Math.sign(delta), decimals)}${unit || ""} seit letztem Lauf</div>`;
+}
+
+function render() {
+  const snap = SNAPSHOTS[selectedIndex];
+  const d = snap.kpi.delta;
+
+  document.getElementById("run-badge").textContent = snap.is_baseline
+    ? "BASELINE · 1. LAUF"
+    : `LAUF ${selectedIndex + 1} / ${SNAPSHOTS.length} · ${utcTime(snap.timestamp_utc)}`;
+
+  document.getElementById("subtitle").innerHTML = snap.is_baseline
+    ? `Erster erfasster Snapshot — ${fmt(snap.instrument_count,0)} Instrumente. Es ist noch kein Delta-Vergleich möglich.`
+    : `${fmt(snap.instrument_count,0)} Instrumente · Vergleich zum jeweils vorherigen Lauf. ${utcTime(snap.timestamp_utc)} / ${berlinTime(snap.timestamp_utc)} (Berlin).`;
+
+  const kpis = [
+    { label: "Call Open Interest", value: fmt(snap.kpi.total_call_oi,0) + " BTC", cls: "call", sub: kpiSubDelta(d && d.total_call_oi, 0) },
+    { label: "Put Open Interest", value: fmt(snap.kpi.total_put_oi,0) + " BTC", cls: "put", sub: kpiSubDelta(d && d.total_put_oi, 0) },
+    { label: "Put/Call-Ratio", value: fmt(snap.kpi.pc_ratio,4), cls: "", sub: kpiSubDelta(d && d.pc_ratio, 4) },
+    { label: "24h-Volumen", value: fmt(snap.kpi.total_volume,0) + " Kontr.", cls: "", sub: d ? kpiSubDelta(d.total_volume, 0) : `<div class="kpi-sub">${fmtCompactUsd(snap.kpi.total_volume_usd)}</div>` },
+    { label: "Instrumente", value: fmt(snap.instrument_count,0), cls: "", sub: "" },
+  ];
+  document.getElementById("kpi-row").innerHTML = kpis.map(k => `
+    <div class="kpi"><div class="kpi-label">${k.label}</div><div class="kpi-value ${k.cls}">${k.value}</div>${k.sub}</div>
+  `).join("");
+
+  if (snap.by_expiry.length === 0) {
+    document.getElementById("chart-expiry-oi").innerHTML = `<div class="empty-note">Keine relevanten Änderungen.</div>`;
+    document.getElementById("chart-expiry-vol").innerHTML = `<div class="empty-note">Keine relevanten Änderungen.</div>`;
+  } else {
+    const expiryMaxOi = Math.max(...snap.by_expiry.map(r => Math.max(r.call_oi, r.put_oi)), 1);
+    document.getElementById("chart-expiry-oi").innerHTML = snap.by_expiry.map(r => barRow(
+      r.expiry,
+      [
+        { value: r.call_oi, cls: "call", label: fmt(r.call_oi,0), delta: r.call_oi_delta },
+        { value: r.put_oi, cls: "put", label: fmt(r.put_oi,0), delta: r.put_oi_delta },
+      ], expiryMaxOi
+    )).join("");
+
+    const volRows = [...snap.by_expiry].sort((a,b) => (snap.is_baseline ? b.volume - a.volume : Math.abs(b.vol_delta||0) - Math.abs(a.vol_delta||0)));
+    const volMax = Math.max(...volRows.map(r => r.volume), 1);
+    document.getElementById("chart-expiry-vol").innerHTML = volRows.map(r => barRow(
+      r.expiry, [{ value: r.volume, cls: "vol", label: fmt(r.volume,0), delta: r.vol_delta }], volMax
+    )).join("");
+  }
+
+  const putShare = snap.kpi.total_oi > 0 ? (snap.kpi.total_put_oi / snap.kpi.total_oi) * 100 : 0;
+  const callShare = 100 - putShare;
+  document.getElementById("chart-pc").innerHTML = `
+    <div style="display:flex;height:22px;border-radius:6px;overflow:hidden;border:1px solid var(--border);margin-bottom:10px;">
+      <div style="width:${callShare}%;background:var(--call);"></div><div style="width:${putShare}%;background:var(--put);"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-family:var(--font-display);font-size:12px;color:var(--ink-secondary);margin-bottom:16px;">
+      <span style="color:var(--call)">${fmt(callShare,1)}% Calls</span><span style="color:var(--put)">${fmt(putShare,1)}% Puts</span>
+    </div>
+    <div class="kpi-label" style="margin-bottom:6px;">Gesamt Open Interest</div>
+    <div class="kpi-value" style="font-size:19px;">${fmt(snap.kpi.total_oi,0)} BTC</div>
+    ${kpiSubDelta(d && d.total_oi, 0)}
+    <div class="kpi-sub" style="margin-top:10px;">${snap.kpi.pc_ratio < 1 ? "Mehr Call- als Put-OI" : "Mehr Put- als Call-OI"} im Markt.</div>
+  `;
+
+  document.getElementById("strike-note").textContent = snap.is_baseline
+    ? `Top 25 nach Gesamt-OI`
+    : `Top ${snap.by_strike.length} Strikes mit OI-Änderung`;
+  if (snap.by_strike.length === 0) {
+    document.getElementById("chart-strike-oi").innerHTML = `<div class="empty-note">Keine relevanten Änderungen.</div>`;
+  } else {
+    const strikeMax = Math.max(...snap.by_strike.map(r => Math.max(r.call_oi, r.put_oi)), 1);
+    document.getElementById("chart-strike-oi").innerHTML = snap.by_strike.map(r => barRow(
+      fmt(r.strike,0),
+      [
+        { value: r.call_oi, cls: "call", label: fmt(r.call_oi,0), delta: r.call_oi_delta },
+        { value: r.put_oi, cls: "put", label: fmt(r.put_oi,0), delta: r.put_oi_delta },
+      ], strikeMax
+    )).join("");
+  }
+
+  document.getElementById("movers-title").textContent = snap.is_baseline ? "Top Instrumente nach Volumen" : "Top Movers nach Volumen-Änderung";
+  document.getElementById("movers-note").textContent = snap.is_baseline ? "Top 15 (Baseline)" : "Top 15 nach |Δ Volumen|";
+  document.getElementById("movers-head").innerHTML = snap.is_baseline
+    ? `<th>Instrument</th><th>Expiry</th><th>Strike</th><th>Typ</th><th style="text-align:right">Volumen</th>`
+    : `<th>Instrument</th><th>Expiry</th><th>Strike</th><th>Typ</th><th style="text-align:right">Vorher</th><th style="text-align:right">Jetzt</th><th style="text-align:right">Δ</th><th style="text-align:right">Δ %</th>`;
+  if (snap.movers.length === 0) {
+    document.getElementById("movers-body").innerHTML = `<tr><td colspan="8" class="empty-note">Keine relevanten Änderungen.</td></tr>`;
+  } else {
+    document.getElementById("movers-body").innerHTML = snap.movers.map(m => snap.is_baseline ? `
+      <tr><td>${m.name}</td><td>${m.expiry}</td><td class="num">${fmt(m.strike,0)}</td>
+      <td><span class="type-chip ${m.type}">${m.type === "C" ? "Call" : "Put"}</span></td>
+      <td class="num">${fmt(m.now,2)}</td></tr>
+    ` : `
+      <tr><td>${m.name}</td><td>${m.expiry}</td><td class="num">${fmt(m.strike,0)}</td>
+      <td><span class="type-chip ${m.type}">${m.type === "C" ? "Call" : "Put"}</span></td>
+      <td class="num">${fmt(m.before,2)}</td><td class="num">${fmt(m.now,2)}</td>
+      <td class="num">${fmtSigned(m.delta,2)}</td><td class="num">${m.delta_pct === null ? "–" : fmtSigned(m.delta_pct,1) + "%"}</td></tr>
+    `).join("");
+  }
+}
+
+renderSelector();
+render();
+</script>
