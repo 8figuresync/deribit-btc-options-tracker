@@ -120,6 +120,31 @@
   .scrollbox::-webkit-scrollbar { width: 8px; }
   .scrollbox::-webkit-scrollbar-thumb { background: var(--gridline); border-radius: 4px; }
 
+  .btc-hero { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px 26px; margin-bottom: 18px; }
+  .btc-hero-price { font-family: var(--font-display); font-size: 36px; font-weight: 700; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; }
+  .btc-hero-price .unit { font-size: 14px; color: var(--ink-muted); font-weight: 500; margin-left: 6px; }
+  .btc-hero-sub { display: flex; gap: 18px; font-family: var(--font-display); font-size: 12.5px; color: var(--ink-secondary); }
+  .btc-hero-sub b { color: var(--ink-primary); font-weight: 600; }
+
+  .weekrange-row { display: flex; gap: 8px; align-items: flex-end; padding-top: 10px; }
+  .weekcol { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .weekcol-tag { font-size: 9.5px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--accent); visibility: hidden; white-space: nowrap; }
+  .weekcol.current .weekcol-tag { visibility: visible; }
+  .weekcol-bar-wrap { position: relative; width: 100%; max-width: 28px; height: 150px; border-radius: 6px; }
+  .weekcol.current .weekcol-bar-wrap { outline: 2px solid var(--accent); outline-offset: 5px; }
+  .weekcol-bar { position: absolute; left: 50%; transform: translateX(-50%); width: 8px; border-radius: 3px; min-height: 2px; }
+  .weekcol-bar.up { background: var(--call); }
+  .weekcol-bar.down { background: var(--put); }
+  .weekcol-close { position: absolute; left: 50%; transform: translate(-50%, -50%); width: 18px; height: 3px; background: var(--ink-primary); border-radius: 2px; }
+  .weekcol-label { font-family: var(--font-display); font-size: 10px; color: var(--ink-muted); white-space: nowrap; }
+
+  .mdelta-legend { display: flex; gap: 18px; flex-wrap: wrap; margin-bottom: 10px; }
+  .mdelta-legend span { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--ink-secondary); }
+  .mdelta-swatch { width: 14px; height: 3px; border-radius: 2px; display: inline-block; }
+  .mdelta-svg-wrap { width: 100%; overflow-x: auto; }
+  .mdelta-point-label { font-family: var(--font-display); font-size: 9px; fill: var(--ink-muted); }
+  .mdelta-axis-label { font-family: var(--font-display); font-size: 10px; fill: var(--ink-muted); }
+
   footer { color: var(--ink-muted); font-size: 11.5px; text-align: center; margin-top: 30px; line-height: 1.6; }
 
   @media (max-width: 760px) {
@@ -148,6 +173,22 @@
   <div class="selector" id="run-selector"></div>
 
   <div class="kpi-row" id="kpi-row"></div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <h2>BTC-Preis — 1-Wochen-Ranges</h2>
+      <span class="panel-note" id="btc-price-note">—</span>
+    </div>
+    <div id="btc-price-content"></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <h2>BTC-Preis vs. höchstes Open Interest (Markt-Delta)</h2>
+      <span class="panel-note">Alle archivierten Läufe</span>
+    </div>
+    <div id="mdelta-content"></div>
+  </div>
 
   <div class="panel">
     <div class="panel-head">
@@ -196,7 +237,8 @@
 </div>
 
 <script>
-const SNAPSHOTS = [{"timestamp_utc":"2026-09-17T18:04:12Z","instrument_count":930,"is_baseline":true,"kpi":{"total_call_oi":281541.1,"total_put_oi":158959.5,"total_oi":440500.6,"pc_ratio":0.5646,"total_volume":33345.7,"total_volume_usd":28806961.43,"delta":null},"by_expiry":[{"expiry":"18SEP26","volume":7729.0,"call_oi":12701.3,"put_oi":9859.2,"vol_delta":null,"call_oi_delta":null,"put_oi_delta":null},{"expiry":"19SEP26","volume":1770.4,"call_oi":2611.0,"put_oi":905.3,"vol_delta":null,"call_oi_delta":null,"put_oi_delta":null},{"expiry":"20SEP26","volume":923.1,"call_oi":651.4,"put_oi":488.2,"vol_delta":null,"call_oi_delta":null,"put_oi_delta":null},{"expiry":"21SEP26","volume":241.3,"call_oi":80.8,"put_oi":160.5,"vol_delta":null,"call_oi_delta":null,"put_oi_delta":null},{"expiry":"25SEP26","volume":10591.0,"call_oi":122985.8,"put_oi":65941.6,"vol_delta":null,"call_oi_delta":null,"put_oi_delta":null},{"expiry":"2OCT26","volume":3261.3,"call_oi":4882.3,"put_oi":2964.8,"vol_delta":null,"call_oi_delta":null,"put_oi_delta":null},{"expiry":"9OCT26","volume":222.7,"call_oi":144.6,"put_oi":73.1,"vol_delta":null,"call_oi_delta":null,"put_oi_delta":null},{"expiry":"30OCT26","volume":5024.2,"call_oi":30846.5,"put_oi":18454.6,"vol_delta":null,"call_oi_delta":null,"put_oi_delta":null},{"expiry":"27NOV26","volume":1982.1,"call_oi":5153.8,"put_oi":2741.9,"vol_delta":null,"call_oi_delta":null,"put_oi_delta":null},{"expiry":"25DEC26","volume":817.4,"call_oi":73482.7,"put_oi":42386.6,"vol_delta":null,"call_oi_delta":null,"put_oi_delta":null},{"expiry":"26MAR27","volume":687.1,"call_oi":21173.8,"put_oi":11608.3,"vol_delta":null,"call_oi_delta":null,"put_oi_delta":null},{"expiry":"25JUN27","volume":96.1,"call_oi":6827.1,"put_oi":3375.4,"vol_delta":null,"call_oi_delta":null,"put_oi_delta":null}],"by_strike":[{"strike":40000.0,"call_oi":386.9,"put_oi":10600.8,"call_oi_delta":null,"put_oi_delta":null},{"strike":50000.0,"call_oi":330.8,"put_oi":9281.1,"call_oi_delta":null,"put_oi_delta":null},{"strike":55000.0,"call_oi":221.2,"put_oi":7891.0,"call_oi_delta":null,"put_oi_delta":null},{"strike":60000.0,"call_oi":3250.7,"put_oi":14460.9,"call_oi_delta":null,"put_oi_delta":null},{"strike":62000.0,"call_oi":1028.1,"put_oi":5177.2,"call_oi_delta":null,"put_oi_delta":null},{"strike":65000.0,"call_oi":2970.1,"put_oi":4099.9,"call_oi_delta":null,"put_oi_delta":null},{"strike":68000.0,"call_oi":2632.8,"put_oi":5325.7,"call_oi_delta":null,"put_oi_delta":null},{"strike":70000.0,"call_oi":14932.9,"put_oi":14286.7,"call_oi_delta":null,"put_oi_delta":null},{"strike":72000.0,"call_oi":5231.6,"put_oi":7277.6,"call_oi_delta":null,"put_oi_delta":null},{"strike":74000.0,"call_oi":1944.0,"put_oi":5531.5,"call_oi_delta":null,"put_oi_delta":null},{"strike":75000.0,"call_oi":6380.6,"put_oi":8936.1,"call_oi_delta":null,"put_oi_delta":null},{"strike":76000.0,"call_oi":4459.6,"put_oi":3219.1,"call_oi_delta":null,"put_oi_delta":null},{"strike":78000.0,"call_oi":9452.5,"put_oi":5937.1,"call_oi_delta":null,"put_oi_delta":null},{"strike":79000.0,"call_oi":5270.4,"put_oi":2043.9,"call_oi_delta":null,"put_oi_delta":null},{"strike":80000.0,"call_oi":21980.9,"put_oi":4373.2,"call_oi_delta":null,"put_oi_delta":null},{"strike":81000.0,"call_oi":6237.3,"put_oi":838.7,"call_oi_delta":null,"put_oi_delta":null},{"strike":82000.0,"call_oi":15173.9,"put_oi":907.5,"call_oi_delta":null,"put_oi_delta":null},{"strike":84000.0,"call_oi":8814.2,"put_oi":237.6,"call_oi_delta":null,"put_oi_delta":null},{"strike":85000.0,"call_oi":17086.2,"put_oi":1182.8,"call_oi_delta":null,"put_oi_delta":null},{"strike":88000.0,"call_oi":7725.2,"put_oi":31.3,"call_oi_delta":null,"put_oi_delta":null},{"strike":90000.0,"call_oi":18562.1,"put_oi":1318.5,"call_oi_delta":null,"put_oi_delta":null},{"strike":95000.0,"call_oi":10058.5,"put_oi":281.4,"call_oi_delta":null,"put_oi_delta":null},{"strike":100000.0,"call_oi":16430.5,"put_oi":653.4,"call_oi_delta":null,"put_oi_delta":null},{"strike":110000.0,"call_oi":6754.6,"put_oi":280.8,"call_oi_delta":null,"put_oi_delta":null},{"strike":120000.0,"call_oi":8365.7,"put_oi":221.5,"call_oi_delta":null,"put_oi_delta":null}],"movers":[{"name":"BTC-18SEP26-74000-P","expiry":"18SEP26","strike":74000.0,"type":"P","before":null,"now":2496.0,"delta":null,"delta_pct":null},{"name":"BTC-18SEP26-79000-C","expiry":"18SEP26","strike":79000.0,"type":"C","before":null,"now":1169.3,"delta":null,"delta_pct":null},{"name":"BTC-25SEP26-80000-C","expiry":"25SEP26","strike":80000.0,"type":"C","before":null,"now":1026.7,"delta":null,"delta_pct":null},{"name":"BTC-25SEP26-73000-P","expiry":"25SEP26","strike":73000.0,"type":"P","before":null,"now":898.5,"delta":null,"delta_pct":null},{"name":"BTC-25SEP26-82000-C","expiry":"25SEP26","strike":82000.0,"type":"C","before":null,"now":867.1,"delta":null,"delta_pct":null},{"name":"BTC-2OCT26-82000-C","expiry":"2OCT26","strike":82000.0,"type":"C","before":null,"now":768.6,"delta":null,"delta_pct":null},{"name":"BTC-18SEP26-72000-P","expiry":"18SEP26","strike":72000.0,"type":"P","before":null,"now":741.4,"delta":null,"delta_pct":null},{"name":"BTC-25SEP26-75000-P","expiry":"25SEP26","strike":75000.0,"type":"P","before":null,"now":739.8,"delta":null,"delta_pct":null},{"name":"BTC-25SEP26-85000-C","expiry":"25SEP26","strike":85000.0,"type":"C","before":null,"now":683.9,"delta":null,"delta_pct":null},{"name":"BTC-18SEP26-75000-P","expiry":"18SEP26","strike":75000.0,"type":"P","before":null,"now":647.3,"delta":null,"delta_pct":null},{"name":"BTC-30OCT26-88000-C","expiry":"30OCT26","strike":88000.0,"type":"C","before":null,"now":644.8,"delta":null,"delta_pct":null},{"name":"BTC-19SEP26-78000-C","expiry":"19SEP26","strike":78000.0,"type":"C","before":null,"now":630.1,"delta":null,"delta_pct":null},{"name":"BTC-25SEP26-79000-C","expiry":"25SEP26","strike":79000.0,"type":"C","before":null,"now":627.8,"delta":null,"delta_pct":null},{"name":"BTC-30OCT26-87000-C","expiry":"30OCT26","strike":87000.0,"type":"C","before":null,"now":578.0,"delta":null,"delta_pct":null},{"name":"BTC-25SEP26-81000-C","expiry":"25SEP26","strike":81000.0,"type":"C","before":null,"now":559.1,"delta":null,"delta_pct":null}]},{"timestamp_utc":"2026-09-17T19:01:17Z","instrument_count":930,"is_baseline":false,"kpi":{"total_call_oi":281756.1,"total_put_oi":159227.2,"total_oi":440983.3,"pc_ratio":0.5651,"total_volume":30973.1,"total_volume_usd":27764996.24,"delta":{"total_call_oi":215.0,"total_put_oi":267.7,"total_oi":482.7,"pc_ratio":0.0005,"total_volume":-2372.6}},"by_expiry":[{"expiry":"18SEP26","volume":6140.1,"call_oi":12687.2,"put_oi":9865.9,"vol_delta":-1588.9,"call_oi_delta":-14.1,"put_oi_delta":6.7},{"expiry":"25SEP26","volume":9660.2,"call_oi":122971.5,"put_oi":65904.2,"vol_delta":-930.8,"call_oi_delta":-14.3,"put_oi_delta":-37.4},{"expiry":"2OCT26","volume":3573.7,"call_oi":4997.5,"put_oi":3182.4,"vol_delta":312.4,"call_oi_delta":115.2,"put_oi_delta":217.6},{"expiry":"9OCT26","volume":351.9,"call_oi":196.4,"put_oi":148.4,"vol_delta":129.2,"call_oi_delta":51.8,"put_oi_delta":75.3},{"expiry":"30OCT26","volume":4843.1,"call_oi":30846.5,"put_oi":18453.9,"vol_delta":-181.1,"call_oi_delta":0.0,"put_oi_delta":-0.7},{"expiry":"27NOV26","volume":2053.0,"call_oi":5222.1,"put_oi":2740.2,"vol_delta":70.9,"call_oi_delta":68.3,"put_oi_delta":-1.7},{"expiry":"19SEP26","volume":1643.0,"call_oi":2612.3,"put_oi":903.9,"vol_delta":-127.4,"call_oi_delta":1.3,"put_oi_delta":-1.4},{"expiry":"20SEP26","volume":853.6,"call_oi":651.7,"put_oi":488.2,"vol_delta":-69.5,"call_oi_delta":0.3,"put_oi_delta":0.0},{"expiry":"21SEP26","volume":262.9,"call_oi":89.6,"put_oi":173.3,"vol_delta":21.6,"call_oi_delta":8.8,"put_oi_delta":12.8},{"expiry":"26MAR27","volume":678.6,"call_oi":21173.6,"put_oi":11608.3,"vol_delta":-8.5,"call_oi_delta":-0.2,"put_oi_delta":0.0},{"expiry":"25DEC26","volume":817.6,"call_oi":73480.6,"put_oi":42383.1,"vol_delta":0.2,"call_oi_delta":-2.1,"put_oi_delta":-3.5},{"expiry":"25JUN27","volume":95.4,"call_oi":6827.1,"put_oi":3375.4,"vol_delta":-0.7,"call_oi_delta":0.0,"put_oi_delta":0.0}],"by_strike":[{"strike":55000.0,"call_oi":221.2,"put_oi":7890.7,"call_oi_delta":0.0,"put_oi_delta":-0.3},{"strike":60000.0,"call_oi":3250.7,"put_oi":14460.2,"call_oi_delta":0.0,"put_oi_delta":-0.7},{"strike":68000.0,"call_oi":2632.6,"put_oi":5324.7,"call_oi_delta":-0.2,"put_oi_delta":-1.0},{"strike":69000.0,"call_oi":649.9,"put_oi":859.9,"call_oi_delta":0.0,"put_oi_delta":-0.1},{"strike":70000.0,"call_oi":14932.9,"put_oi":14286.2,"call_oi_delta":0.0,"put_oi_delta":-0.5},{"strike":72000.0,"call_oi":5231.6,"put_oi":7227.1,"call_oi_delta":0.0,"put_oi_delta":-50.5},{"strike":73000.0,"call_oi":669.8,"put_oi":2789.2,"call_oi_delta":0.0,"put_oi_delta":240.0},{"strike":73500.0,"call_oi":8.8,"put_oi":124.6,"call_oi_delta":8.8,"put_oi_delta":-2.0},{"strike":74000.0,"call_oi":1941.0,"put_oi":5547.9,"call_oi_delta":-3.0,"put_oi_delta":16.4},{"strike":75000.0,"call_oi":6380.6,"put_oi":8982.1,"call_oi_delta":0.0,"put_oi_delta":46.0},{"strike":76000.0,"call_oi":4509.6,"put_oi":3220.8,"call_oi_delta":50.0,"put_oi_delta":1.7},{"strike":77000.0,"call_oi":1602.7,"put_oi":2402.5,"call_oi_delta":-14.5,"put_oi_delta":-0.1},{"strike":78000.0,"call_oi":9453.5,"put_oi":5937.1,"call_oi_delta":1.0,"put_oi_delta":0.0},{"strike":78500.0,"call_oi":615.7,"put_oi":9.4,"call_oi_delta":1.5,"put_oi_delta":0.0},{"strike":79000.0,"call_oi":5272.7,"put_oi":2043.9,"call_oi_delta":2.3,"put_oi_delta":0.0},{"strike":80000.0,"call_oi":22049.2,"put_oi":4373.2,"call_oi_delta":68.3,"put_oi_delta":0.0},{"strike":81000.0,"call_oi":6229.8,"put_oi":838.7,"call_oi_delta":-7.5,"put_oi_delta":0.0},{"strike":82000.0,"call_oi":15284.4,"put_oi":907.5,"call_oi_delta":110.5,"put_oi_delta":0.0},{"strike":83000.0,"call_oi":3549.9,"put_oi":180.1,"call_oi_delta":0.0,"put_oi_delta":7.4},{"strike":87000.0,"call_oi":1085.7,"put_oi":41.6,"call_oi_delta":0.0,"put_oi_delta":7.2},{"strike":90000.0,"call_oi":18562.0,"put_oi":1318.5,"call_oi_delta":-0.1,"put_oi_delta":0.0},{"strike":105000.0,"call_oi":3930.1,"put_oi":215.8,"call_oi_delta":-1.0,"put_oi_delta":0.0},{"strike":106000.0,"call_oi":820.1,"put_oi":0.3,"call_oi_delta":-1.0,"put_oi_delta":0.0},{"strike":120000.0,"call_oi":8365.5,"put_oi":221.5,"call_oi_delta":-0.2,"put_oi_delta":0.0},{"strike":145000.0,"call_oi":519.2,"put_oi":4.4,"call_oi_delta":0.0,"put_oi_delta":4.2}],"movers":[{"name":"BTC-18SEP26-79000-C","expiry":"18SEP26","strike":79000.0,"type":"C","before":1169.3,"now":770.3,"delta":-399.0,"delta_pct":-34.1},{"name":"BTC-18SEP26-75000-P","expiry":"18SEP26","strike":75000.0,"type":"P","before":647.3,"now":275.8,"delta":-371.5,"delta_pct":-57.4},{"name":"BTC-18SEP26-74000-P","expiry":"18SEP26","strike":74000.0,"type":"P","before":2496.0,"now":2269.2,"delta":-226.8,"delta_pct":-9.1},{"name":"BTC-2OCT26-82000-C","expiry":"2OCT26","strike":82000.0,"type":"C","before":768.6,"now":993.2,"delta":224.6,"delta_pct":29.2},{"name":"BTC-2OCT26-73000-P","expiry":"2OCT26","strike":73000.0,"type":"P","before":49.8,"now":264.8,"delta":215.0,"delta_pct":431.7},{"name":"BTC-18SEP26-76000-P","expiry":"18SEP26","strike":76000.0,"type":"P","before":476.0,"now":308.9,"delta":-167.1,"delta_pct":-35.1},{"name":"BTC-25SEP26-75000-P","expiry":"25SEP26","strike":75000.0,"type":"P","before":739.8,"now":608.6,"delta":-131.2,"delta_pct":-17.7},{"name":"BTC-25SEP26-78000-C","expiry":"25SEP26","strike":78000.0,"type":"C","before":412.7,"now":286.2,"delta":-126.5,"delta_pct":-30.7},{"name":"BTC-2OCT26-75000-P","expiry":"2OCT26","strike":75000.0,"type":"P","before":446.3,"now":335.3,"delta":-111.0,"delta_pct":-24.9},{"name":"BTC-25SEP26-66000-P","expiry":"25SEP26","strike":66000.0,"type":"P","before":117.0,"now":15.0,"delta":-102.0,"delta_pct":-87.2},{"name":"BTC-25SEP26-62000-P","expiry":"25SEP26","strike":62000.0,"type":"P","before":294.3,"now":199.9,"delta":-94.4,"delta_pct":-32.1},{"name":"BTC-25SEP26-85000-C","expiry":"25SEP26","strike":85000.0,"type":"C","before":683.9,"now":603.9,"delta":-80.0,"delta_pct":-11.7},{"name":"BTC-30OCT26-79000-P","expiry":"30OCT26","strike":79000.0,"type":"P","before":81.8,"now":3.6,"delta":-78.2,"delta_pct":-95.6},{"name":"BTC-30OCT26-79000-C","expiry":"30OCT26","strike":79000.0,"type":"C","before":83.9,"now":7.9,"delta":-76.0,"delta_pct":-90.6},{"name":"BTC-25SEP26-88000-C","expiry":"25SEP26","strike":88000.0,"type":"C","before":351.8,"now":279.9,"delta":-71.9,"delta_pct":-20.4}]}];
+const SNAPSHOTS = [{"timestamp_utc":"2026-09-17T18:04:12Z","instrument_count":930,"is_baseline":true,"btc_index_price":null,"btc_weekly_ranges":null,"kpi":{"total_call_oi":281541.1,"total_put_oi":158959.5,"total_oi":440500.6,"pc_ratio":0.5646,"total_volume":33345.7,"total_volume_usd":28806961.43,"delta":null},"by_expiry":[{"expiry":"18SEP26","volume":7729.0,"call_oi":12701.3,"put_oi":9859.2,"vol_delta":null,"call_oi_delta":null,"put_oi_delta":null},{"expiry":"19SEP26","volume":1770.4,"call_oi":2611.0,"put_oi":905.3,"vol_delta":null,"call_oi_delta":null,"put_oi_delta":null},{"expiry":"20SEP26","volume":923.1,"call_oi":651.4,"put_oi":488.2,"vol_delta":null,"call_oi_delta":null,"put_oi_delta":null},{"expiry":"21SEP26","volume":241.3,"call_oi":80.8,"put_oi":160.5,"vol_delta":null,"call_oi_delta":null,"put_oi_delta":null},{"expiry":"25SEP26","volume":10591.0,"call_oi":122985.8,"put_oi":65941.6,"vol_delta":null,"call_oi_delta":null,"put_oi_delta":null},{"expiry":"2OCT26","volume":3261.3,"call_oi":4882.3,"put_oi":2964.8,"vol_delta":null,"call_oi_delta":null,"put_oi_delta":null},{"expiry":"9OCT26","volume":222.7,"call_oi":144.6,"put_oi":73.1,"vol_delta":null,"call_oi_delta":null,"put_oi_delta":null},{"expiry":"30OCT26","volume":5024.2,"call_oi":30846.5,"put_oi":18454.6,"vol_delta":null,"call_oi_delta":null,"put_oi_delta":null},{"expiry":"27NOV26","volume":1982.1,"call_oi":5153.8,"put_oi":2741.9,"vol_delta":null,"call_oi_delta":null,"put_oi_delta":null},{"expiry":"25DEC26","volume":817.4,"call_oi":73482.7,"put_oi":42386.6,"vol_delta":null,"call_oi_delta":null,"put_oi_delta":null},{"expiry":"26MAR27","volume":687.1,"call_oi":21173.8,"put_oi":11608.3,"vol_delta":null,"call_oi_delta":null,"put_oi_delta":null},{"expiry":"25JUN27","volume":96.1,"call_oi":6827.1,"put_oi":3375.4,"vol_delta":null,"call_oi_delta":null,"put_oi_delta":null}],"by_strike":[{"strike":40000.0,"call_oi":386.9,"put_oi":10600.8,"call_oi_delta":null,"put_oi_delta":null},{"strike":50000.0,"call_oi":330.8,"put_oi":9281.1,"call_oi_delta":null,"put_oi_delta":null},{"strike":55000.0,"call_oi":221.2,"put_oi":7891.0,"call_oi_delta":null,"put_oi_delta":null},{"strike":60000.0,"call_oi":3250.7,"put_oi":14460.9,"call_oi_delta":null,"put_oi_delta":null},{"strike":62000.0,"call_oi":1028.1,"put_oi":5177.2,"call_oi_delta":null,"put_oi_delta":null},{"strike":65000.0,"call_oi":2970.1,"put_oi":4099.9,"call_oi_delta":null,"put_oi_delta":null},{"strike":68000.0,"call_oi":2632.8,"put_oi":5325.7,"call_oi_delta":null,"put_oi_delta":null},{"strike":70000.0,"call_oi":14932.9,"put_oi":14286.7,"call_oi_delta":null,"put_oi_delta":null},{"strike":72000.0,"call_oi":5231.6,"put_oi":7277.6,"call_oi_delta":null,"put_oi_delta":null},{"strike":74000.0,"call_oi":1944.0,"put_oi":5531.5,"call_oi_delta":null,"put_oi_delta":null},{"strike":75000.0,"call_oi":6380.6,"put_oi":8936.1,"call_oi_delta":null,"put_oi_delta":null},{"strike":76000.0,"call_oi":4459.6,"put_oi":3219.1,"call_oi_delta":null,"put_oi_delta":null},{"strike":78000.0,"call_oi":9452.5,"put_oi":5937.1,"call_oi_delta":null,"put_oi_delta":null},{"strike":79000.0,"call_oi":5270.4,"put_oi":2043.9,"call_oi_delta":null,"put_oi_delta":null},{"strike":80000.0,"call_oi":21980.9,"put_oi":4373.2,"call_oi_delta":null,"put_oi_delta":null},{"strike":81000.0,"call_oi":6237.3,"put_oi":838.7,"call_oi_delta":null,"put_oi_delta":null},{"strike":82000.0,"call_oi":15173.9,"put_oi":907.5,"call_oi_delta":null,"put_oi_delta":null},{"strike":84000.0,"call_oi":8814.2,"put_oi":237.6,"call_oi_delta":null,"put_oi_delta":null},{"strike":85000.0,"call_oi":17086.2,"put_oi":1182.8,"call_oi_delta":null,"put_oi_delta":null},{"strike":88000.0,"call_oi":7725.2,"put_oi":31.3,"call_oi_delta":null,"put_oi_delta":null},{"strike":90000.0,"call_oi":18562.1,"put_oi":1318.5,"call_oi_delta":null,"put_oi_delta":null},{"strike":95000.0,"call_oi":10058.5,"put_oi":281.4,"call_oi_delta":null,"put_oi_delta":null},{"strike":100000.0,"call_oi":16430.5,"put_oi":653.4,"call_oi_delta":null,"put_oi_delta":null},{"strike":110000.0,"call_oi":6754.6,"put_oi":280.8,"call_oi_delta":null,"put_oi_delta":null},{"strike":120000.0,"call_oi":8365.7,"put_oi":221.5,"call_oi_delta":null,"put_oi_delta":null}],"movers":[{"name":"BTC-18SEP26-74000-P","expiry":"18SEP26","strike":74000.0,"type":"P","before":null,"now":2496.0,"delta":null,"delta_pct":null},{"name":"BTC-18SEP26-79000-C","expiry":"18SEP26","strike":79000.0,"type":"C","before":null,"now":1169.3,"delta":null,"delta_pct":null},{"name":"BTC-25SEP26-80000-C","expiry":"25SEP26","strike":80000.0,"type":"C","before":null,"now":1026.7,"delta":null,"delta_pct":null},{"name":"BTC-25SEP26-73000-P","expiry":"25SEP26","strike":73000.0,"type":"P","before":null,"now":898.5,"delta":null,"delta_pct":null},{"name":"BTC-25SEP26-82000-C","expiry":"25SEP26","strike":82000.0,"type":"C","before":null,"now":867.1,"delta":null,"delta_pct":null},{"name":"BTC-2OCT26-82000-C","expiry":"2OCT26","strike":82000.0,"type":"C","before":null,"now":768.6,"delta":null,"delta_pct":null},{"name":"BTC-18SEP26-72000-P","expiry":"18SEP26","strike":72000.0,"type":"P","before":null,"now":741.4,"delta":null,"delta_pct":null},{"name":"BTC-25SEP26-75000-P","expiry":"25SEP26","strike":75000.0,"type":"P","before":null,"now":739.8,"delta":null,"delta_pct":null},{"name":"BTC-25SEP26-85000-C","expiry":"25SEP26","strike":85000.0,"type":"C","before":null,"now":683.9,"delta":null,"delta_pct":null},{"name":"BTC-18SEP26-75000-P","expiry":"18SEP26","strike":75000.0,"type":"P","before":null,"now":647.3,"delta":null,"delta_pct":null},{"name":"BTC-30OCT26-88000-C","expiry":"30OCT26","strike":88000.0,"type":"C","before":null,"now":644.8,"delta":null,"delta_pct":null},{"name":"BTC-19SEP26-78000-C","expiry":"19SEP26","strike":78000.0,"type":"C","before":null,"now":630.1,"delta":null,"delta_pct":null},{"name":"BTC-25SEP26-79000-C","expiry":"25SEP26","strike":79000.0,"type":"C","before":null,"now":627.8,"delta":null,"delta_pct":null},{"name":"BTC-30OCT26-87000-C","expiry":"30OCT26","strike":87000.0,"type":"C","before":null,"now":578.0,"delta":null,"delta_pct":null},{"name":"BTC-25SEP26-81000-C","expiry":"25SEP26","strike":81000.0,"type":"C","before":null,"now":559.1,"delta":null,"delta_pct":null}]},{"timestamp_utc":"2026-09-17T19:01:17Z","instrument_count":930,"is_baseline":false,"btc_index_price":null,"btc_weekly_ranges":null,"kpi":{"total_call_oi":281756.1,"total_put_oi":159227.2,"total_oi":440983.3,"pc_ratio":0.5651,"total_volume":30973.1,"total_volume_usd":27764996.24,"delta":{"total_call_oi":215.0,"total_put_oi":267.7,"total_oi":482.7,"pc_ratio":0.0005,"total_volume":-2372.6}},"by_expiry":[{"expiry":"18SEP26","volume":6140.1,"call_oi":12687.2,"put_oi":9865.9,"vol_delta":-1588.9,"call_oi_delta":-14.1,"put_oi_delta":6.7},{"expiry":"25SEP26","volume":9660.2,"call_oi":122971.5,"put_oi":65904.2,"vol_delta":-930.8,"call_oi_delta":-14.3,"put_oi_delta":-37.4},{"expiry":"2OCT26","volume":3573.7,"call_oi":4997.5,"put_oi":3182.4,"vol_delta":312.4,"call_oi_delta":115.2,"put_oi_delta":217.6},{"expiry":"9OCT26","volume":351.9,"call_oi":196.4,"put_oi":148.4,"vol_delta":129.2,"call_oi_delta":51.8,"put_oi_delta":75.3},{"expiry":"30OCT26","volume":4843.1,"call_oi":30846.5,"put_oi":18453.9,"vol_delta":-181.1,"call_oi_delta":0.0,"put_oi_delta":-0.7},{"expiry":"27NOV26","volume":2053.0,"call_oi":5222.1,"put_oi":2740.2,"vol_delta":70.9,"call_oi_delta":68.3,"put_oi_delta":-1.7},{"expiry":"19SEP26","volume":1643.0,"call_oi":2612.3,"put_oi":903.9,"vol_delta":-127.4,"call_oi_delta":1.3,"put_oi_delta":-1.4},{"expiry":"20SEP26","volume":853.6,"call_oi":651.7,"put_oi":488.2,"vol_delta":-69.5,"call_oi_delta":0.3,"put_oi_delta":0.0},{"expiry":"21SEP26","volume":262.9,"call_oi":89.6,"put_oi":173.3,"vol_delta":21.6,"call_oi_delta":8.8,"put_oi_delta":12.8},{"expiry":"26MAR27","volume":678.6,"call_oi":21173.6,"put_oi":11608.3,"vol_delta":-8.5,"call_oi_delta":-0.2,"put_oi_delta":0.0},{"expiry":"25DEC26","volume":817.6,"call_oi":73480.6,"put_oi":42383.1,"vol_delta":0.2,"call_oi_delta":-2.1,"put_oi_delta":-3.5},{"expiry":"25JUN27","volume":95.4,"call_oi":6827.1,"put_oi":3375.4,"vol_delta":-0.7,"call_oi_delta":0.0,"put_oi_delta":0.0}],"by_strike":[{"strike":55000.0,"call_oi":221.2,"put_oi":7890.7,"call_oi_delta":0.0,"put_oi_delta":-0.3},{"strike":60000.0,"call_oi":3250.7,"put_oi":14460.2,"call_oi_delta":0.0,"put_oi_delta":-0.7},{"strike":68000.0,"call_oi":2632.6,"put_oi":5324.7,"call_oi_delta":-0.2,"put_oi_delta":-1.0},{"strike":69000.0,"call_oi":649.9,"put_oi":859.9,"call_oi_delta":0.0,"put_oi_delta":-0.1},{"strike":70000.0,"call_oi":14932.9,"put_oi":14286.2,"call_oi_delta":0.0,"put_oi_delta":-0.5},{"strike":72000.0,"call_oi":5231.6,"put_oi":7227.1,"call_oi_delta":0.0,"put_oi_delta":-50.5},{"strike":73000.0,"call_oi":669.8,"put_oi":2789.2,"call_oi_delta":0.0,"put_oi_delta":240.0},{"strike":73500.0,"call_oi":8.8,"put_oi":124.6,"call_oi_delta":8.8,"put_oi_delta":-2.0},{"strike":74000.0,"call_oi":1941.0,"put_oi":5547.9,"call_oi_delta":-3.0,"put_oi_delta":16.4},{"strike":75000.0,"call_oi":6380.6,"put_oi":8982.1,"call_oi_delta":0.0,"put_oi_delta":46.0},{"strike":76000.0,"call_oi":4509.6,"put_oi":3220.8,"call_oi_delta":50.0,"put_oi_delta":1.7},{"strike":77000.0,"call_oi":1602.7,"put_oi":2402.5,"call_oi_delta":-14.5,"put_oi_delta":-0.1},{"strike":78000.0,"call_oi":9453.5,"put_oi":5937.1,"call_oi_delta":1.0,"put_oi_delta":0.0},{"strike":78500.0,"call_oi":615.7,"put_oi":9.4,"call_oi_delta":1.5,"put_oi_delta":0.0},{"strike":79000.0,"call_oi":5272.7,"put_oi":2043.9,"call_oi_delta":2.3,"put_oi_delta":0.0},{"strike":80000.0,"call_oi":22049.2,"put_oi":4373.2,"call_oi_delta":68.3,"put_oi_delta":0.0},{"strike":81000.0,"call_oi":6229.8,"put_oi":838.7,"call_oi_delta":-7.5,"put_oi_delta":0.0},{"strike":82000.0,"call_oi":15284.4,"put_oi":907.5,"call_oi_delta":110.5,"put_oi_delta":0.0},{"strike":83000.0,"call_oi":3549.9,"put_oi":180.1,"call_oi_delta":0.0,"put_oi_delta":7.4},{"strike":87000.0,"call_oi":1085.7,"put_oi":41.6,"call_oi_delta":0.0,"put_oi_delta":7.2},{"strike":90000.0,"call_oi":18562.0,"put_oi":1318.5,"call_oi_delta":-0.1,"put_oi_delta":0.0},{"strike":105000.0,"call_oi":3930.1,"put_oi":215.8,"call_oi_delta":-1.0,"put_oi_delta":0.0},{"strike":106000.0,"call_oi":820.1,"put_oi":0.3,"call_oi_delta":-1.0,"put_oi_delta":0.0},{"strike":120000.0,"call_oi":8365.5,"put_oi":221.5,"call_oi_delta":-0.2,"put_oi_delta":0.0},{"strike":145000.0,"call_oi":519.2,"put_oi":4.4,"call_oi_delta":0.0,"put_oi_delta":4.2}],"movers":[{"name":"BTC-18SEP26-79000-C","expiry":"18SEP26","strike":79000.0,"type":"C","before":1169.3,"now":770.3,"delta":-399.0,"delta_pct":-34.1},{"name":"BTC-18SEP26-75000-P","expiry":"18SEP26","strike":75000.0,"type":"P","before":647.3,"now":275.8,"delta":-371.5,"delta_pct":-57.4},{"name":"BTC-18SEP26-74000-P","expiry":"18SEP26","strike":74000.0,"type":"P","before":2496.0,"now":2269.2,"delta":-226.8,"delta_pct":-9.1},{"name":"BTC-2OCT26-82000-C","expiry":"2OCT26","strike":82000.0,"type":"C","before":768.6,"now":993.2,"delta":224.6,"delta_pct":29.2},{"name":"BTC-2OCT26-73000-P","expiry":"2OCT26","strike":73000.0,"type":"P","before":49.8,"now":264.8,"delta":215.0,"delta_pct":431.7},{"name":"BTC-18SEP26-76000-P","expiry":"18SEP26","strike":76000.0,"type":"P","before":476.0,"now":308.9,"delta":-167.1,"delta_pct":-35.1},{"name":"BTC-25SEP26-75000-P","expiry":"25SEP26","strike":75000.0,"type":"P","before":739.8,"now":608.6,"delta":-131.2,"delta_pct":-17.7},{"name":"BTC-25SEP26-78000-C","expiry":"25SEP26","strike":78000.0,"type":"C","before":412.7,"now":286.2,"delta":-126.5,"delta_pct":-30.7},{"name":"BTC-2OCT26-75000-P","expiry":"2OCT26","strike":75000.0,"type":"P","before":446.3,"now":335.3,"delta":-111.0,"delta_pct":-24.9},{"name":"BTC-25SEP26-66000-P","expiry":"25SEP26","strike":66000.0,"type":"P","before":117.0,"now":15.0,"delta":-102.0,"delta_pct":-87.2},{"name":"BTC-25SEP26-62000-P","expiry":"25SEP26","strike":62000.0,"type":"P","before":294.3,"now":199.9,"delta":-94.4,"delta_pct":-32.1},{"name":"BTC-25SEP26-85000-C","expiry":"25SEP26","strike":85000.0,"type":"C","before":683.9,"now":603.9,"delta":-80.0,"delta_pct":-11.7},{"name":"BTC-30OCT26-79000-P","expiry":"30OCT26","strike":79000.0,"type":"P","before":81.8,"now":3.6,"delta":-78.2,"delta_pct":-95.6},{"name":"BTC-30OCT26-79000-C","expiry":"30OCT26","strike":79000.0,"type":"C","before":83.9,"now":7.9,"delta":-76.0,"delta_pct":-90.6},{"name":"BTC-25SEP26-88000-C","expiry":"25SEP26","strike":88000.0,"type":"C","before":351.8,"now":279.9,"delta":-71.9,"delta_pct":-20.4}]}];
+const MARKET_DELTA = [{"timestamp_utc":"2026-09-17T18:04:12Z","btc_index_price":null,"top_strike":70000.0,"top_strike_oi":29219.6},{"timestamp_utc":"2026-09-17T19:01:17Z","btc_index_price":null,"top_strike":70000.0,"top_strike_oi":29219.1}];
 let selectedIndex = SNAPSHOTS.length - 1;
 
 function fmt(n, decimals) {
@@ -249,6 +291,124 @@ function kpiSubDelta(delta, decimals, unit) {
   if (delta === 0) return `<div class="kpi-sub">± 0 seit letztem Lauf</div>`;
   const cls = delta > 0 ? "up" : "down";
   return `<div class="kpi-sub ${cls}">${fmtSigned(Math.abs(delta) * Math.sign(delta), decimals)}${unit || ""} seit letztem Lauf</div>`;
+}
+
+function fmtWeekLabel(weekStart) {
+  const d = new Date(weekStart + "T00:00:00Z");
+  return new Intl.DateTimeFormat("de-DE", { timeZone: "UTC", day: "2-digit", month: "2-digit" }).format(d);
+}
+
+function renderBtcPrice(snap) {
+  const note = document.getElementById("btc-price-note");
+  const el = document.getElementById("btc-price-content");
+  const weeks = snap.btc_weekly_ranges;
+  const price = snap.btc_index_price;
+
+  if (!weeks || weeks.length === 0 || price === null || price === undefined) {
+    note.textContent = "—";
+    el.innerHTML = `<div class="empty-note">Noch keine Preis-Daten für diesen Lauf — wird ab dem nächsten Fetch mit Preis-Feldern befüllt.</div>`;
+    return;
+  }
+
+  note.textContent = `Letzte ${weeks.length} Wochen`;
+  const currentWeek = weeks[weeks.length - 1];
+
+  const allValues = weeks.flatMap(w => [w.high, w.low]).concat([price]);
+  const rangeMin = Math.min(...allValues);
+  const rangeMax = Math.max(...allValues);
+  const span = Math.max(rangeMax - rangeMin, 1);
+  const barWrapHeight = 150;
+  const pad = barWrapHeight * 0.08;
+  const usable = barWrapHeight - pad * 2;
+  const scale = v => pad + (1 - (v - rangeMin) / span) * usable;
+
+  const hero = `
+    <div class="btc-hero">
+      <div class="btc-hero-price">${fmt(price, 0)}<span class="unit">USD · aktuell</span></div>
+      <div class="btc-hero-sub">
+        <span>Hoch (Woche): <b>${fmt(currentWeek.high, 0)}</b></span>
+        <span>Tief (Woche): <b>${fmt(currentWeek.low, 0)}</b></span>
+      </div>
+    </div>`;
+
+  const cols = weeks.map((w, i) => {
+    const isCurrent = i === weeks.length - 1;
+    const top = scale(w.high);
+    const bottom = scale(w.low);
+    const height = Math.max(bottom - top, 2);
+    const closeTop = scale(w.close);
+    const isUp = w.close >= w.open;
+    return `
+      <div class="weekcol ${isCurrent ? "current" : ""}">
+        <div class="weekcol-tag">aktuell</div>
+        <div class="weekcol-bar-wrap">
+          <div class="weekcol-bar ${isUp ? "up" : "down"}" style="top:${top}px;height:${height}px;"></div>
+          <div class="weekcol-close" style="top:${closeTop}px;"></div>
+        </div>
+        <div class="weekcol-label">${fmtWeekLabel(w.week_start)}</div>
+      </div>`;
+  }).join("");
+
+  el.innerHTML = hero + `<div class="weekrange-row">${cols}</div>`;
+}
+
+function renderMarketDelta() {
+  const el = document.getElementById("mdelta-content");
+  const points = MARKET_DELTA.filter(p => p.btc_index_price !== null && p.btc_index_price !== undefined);
+
+  if (points.length < 2) {
+    el.innerHTML = `<div class="empty-note">Noch nicht genug Preis-Datenpunkte – baut sich mit jedem Lauf auf.</div>`;
+    return;
+  }
+
+  const w = Math.max(640, points.length * 90);
+  const h = 260;
+  const padL = 56, padR = 56, padT = 20, padB = 36;
+  const plotW = w - padL - padR;
+  const plotH = h - padT - padB;
+
+  const prices = points.map(p => p.btc_index_price);
+  const ois = points.map(p => p.top_strike_oi || 0);
+  const priceMin = Math.min(...prices), priceMax = Math.max(...prices);
+  const priceSpan = Math.max(priceMax - priceMin, 1);
+  const oiMin = Math.min(...ois), oiMax = Math.max(...ois);
+  const oiSpan = Math.max(oiMax - oiMin, 1);
+
+  const x = i => padL + (points.length === 1 ? plotW / 2 : (i / (points.length - 1)) * plotW);
+  const yPrice = v => padT + (1 - (v - priceMin) / priceSpan) * plotH;
+  const yOi = v => padT + (1 - (v - oiMin) / oiSpan) * plotH;
+
+  const pricePath = points.map((p, i) => `${i === 0 ? "M" : "L"}${x(i).toFixed(1)},${yPrice(p.btc_index_price).toFixed(1)}`).join(" ");
+  const oiPath = points.map((p, i) => `${i === 0 ? "M" : "L"}${x(i).toFixed(1)},${yOi(p.top_strike_oi || 0).toFixed(1)}`).join(" ");
+
+  const priceDots = points.map((p, i) => `<circle cx="${x(i).toFixed(1)}" cy="${yPrice(p.btc_index_price).toFixed(1)}" r="3" fill="var(--accent)" />`).join("");
+  const oiDots = points.map((p, i) => `<circle cx="${x(i).toFixed(1)}" cy="${yOi(p.top_strike_oi || 0).toFixed(1)}" r="3" fill="var(--put)" />`).join("");
+  const strikeLabels = points.map((p, i) => `<text class="mdelta-point-label" x="${x(i).toFixed(1)}" y="${(yOi(p.top_strike_oi || 0) - 8).toFixed(1)}" text-anchor="middle">${p.top_strike !== null && p.top_strike !== undefined ? fmt(p.top_strike, 0) : "–"}</text>`).join("");
+  const xLabels = points.map((p, i) => `<text class="mdelta-axis-label" x="${x(i).toFixed(1)}" y="${h - 10}" text-anchor="middle">${utcTime(p.timestamp_utc)}</text>`).join("");
+
+  el.innerHTML = `
+    <div class="mdelta-legend">
+      <span><i class="mdelta-swatch" style="background:var(--accent)"></i>BTC-Preis (USD, linke Achse)</span>
+      <span><i class="mdelta-swatch" style="background:var(--put)"></i>OI am Top-Strike (BTC, rechte Achse) · Label = Strike</span>
+    </div>
+    <div class="mdelta-svg-wrap">
+      <svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" style="min-width:${w}px;">
+        <line x1="${padL}" y1="${padT}" x2="${padL}" y2="${h - padB}" stroke="var(--gridline)" />
+        <line x1="${w - padR}" y1="${padT}" x2="${w - padR}" y2="${h - padB}" stroke="var(--gridline)" />
+        <line x1="${padL}" y1="${h - padB}" x2="${w - padR}" y2="${h - padB}" stroke="var(--gridline)" />
+        <text class="mdelta-axis-label" x="${padL}" y="${padT - 6}" text-anchor="start">${fmt(priceMax,0)}</text>
+        <text class="mdelta-axis-label" x="${padL}" y="${h - padB + 14}" text-anchor="start">${fmt(priceMin,0)}</text>
+        <text class="mdelta-axis-label" x="${w - padR}" y="${padT - 6}" text-anchor="end">${fmt(oiMax,0)} BTC</text>
+        <text class="mdelta-axis-label" x="${w - padR}" y="${h - padB + 14}" text-anchor="end">${fmt(oiMin,0)} BTC</text>
+        <path d="${oiPath}" fill="none" stroke="var(--put)" stroke-width="2" stroke-dasharray="4 3" />
+        <path d="${pricePath}" fill="none" stroke="var(--accent)" stroke-width="2.5" />
+        ${oiDots}
+        ${priceDots}
+        ${strikeLabels}
+        ${xLabels}
+      </svg>
+    </div>
+  `;
 }
 
 function render() {
@@ -344,8 +504,11 @@ function render() {
       <td class="num">${fmtSigned(m.delta,2)}</td><td class="num">${m.delta_pct === null ? "–" : fmtSigned(m.delta_pct,1) + "%"}</td></tr>
     `).join("");
   }
+
+  renderBtcPrice(snap);
 }
 
 renderSelector();
 render();
+renderMarketDelta();
 </script>

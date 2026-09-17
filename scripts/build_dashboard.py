@@ -179,6 +179,8 @@ def build_record(snapshot, agg, prev_agg):
         "timestamp_utc": snapshot["timestamp_utc"],
         "instrument_count": agg["instrument_count"],
         "is_baseline": prev_agg is None,
+        "btc_index_price": snapshot.get("btc_index_price"),
+        "btc_weekly_ranges": snapshot.get("btc_weekly_ranges"),
         "kpi": {
             "total_call_oi": round(agg["total_call_oi"], 2),
             "total_put_oi": round(agg["total_put_oi"], 2),
@@ -195,20 +197,46 @@ def build_record(snapshot, agg, prev_agg):
     }
 
 
+def top_strike_by_oi(agg):
+    top_strike = None
+    top_strike_oi = None
+    for strike, row in agg["by_strike"].items():
+        oi = row["call_oi"] + row["put_oi"]
+        if oi <= 0:
+            continue
+        if top_strike_oi is None or oi > top_strike_oi:
+            top_strike = strike
+            top_strike_oi = oi
+    return top_strike, top_strike_oi
+
+
+def build_market_delta_point(snapshot, agg):
+    top_strike, top_strike_oi = top_strike_by_oi(agg)
+    return {
+        "timestamp_utc": snapshot["timestamp_utc"],
+        "btc_index_price": snapshot.get("btc_index_price"),
+        "top_strike": top_strike,
+        "top_strike_oi": round(top_strike_oi, 2) if top_strike_oi is not None else None,
+    }
+
+
 def main():
     snapshots = load_snapshots()
     if not snapshots:
         raise SystemExit("Keine Snapshots unter snapshots/*-UTC.json gefunden — Dashboard nicht erzeugt.")
 
     records = []
+    market_delta = []
     prev_agg = None
     for snap in snapshots:
         agg = aggregate(snap)
         records.append(build_record(snap, agg, prev_agg))
+        market_delta.append(build_market_delta_point(snap, agg))
         prev_agg = agg
 
     template = TEMPLATE_PATH.read_text()
     html = template.replace("__SNAPSHOTS_JSON__", json.dumps(records, separators=(",", ":")))
+    html = html.replace("__MARKET_DELTA_JSON__", json.dumps(market_delta, separators=(",", ":")))
 
     OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     OUT_PATH.write_text(html)
