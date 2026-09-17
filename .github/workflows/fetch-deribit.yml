@@ -1,0 +1,40 @@
+name: Fetch Deribit BTC options snapshot
+
+# Runs on GitHub-hosted runners, which have normal internet access.
+# The Claude Code cloud session that generates the report cannot reach
+# www.deribit.com directly (blocked by its network egress policy), so this
+# workflow does the actual API fetch and commits the raw snapshot for that
+# session to read from snapshots/incoming.json.
+on:
+  schedule:
+    # 10 minutes before the tracker's own 06:00 / 14:00 / 22:00 Europe/Berlin runs.
+    - cron: '50 3,11,19 * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: fetch-deribit
+  cancel-in-progress: false
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch Deribit snapshot
+        run: python3 scripts/fetch_deribit.py
+
+      - name: Commit and push snapshot
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add snapshots/incoming.json
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Fetch Deribit snapshot $(date -u +'%Y-%m-%d %H:%M') UTC"
+            git push
+          fi
