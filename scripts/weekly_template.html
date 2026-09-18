@@ -80,6 +80,12 @@
   .status-chip.hit { background: var(--call-soft); color: var(--call); }
   .status-chip.not-hit { background: var(--gridline); color: var(--ink-secondary); }
 
+  .direction-chip { display: inline-block; font-family: var(--font-body); font-size: 10.5px; font-weight: 700; padding: 1px 6px; border-radius: 4px; }
+  .direction-chip.call { background: var(--call-soft); color: var(--call); }
+  .direction-chip.put { background: var(--put-soft); color: var(--put); }
+
+  .level-explainer { font-size: 12.5px; color: var(--ink-secondary); line-height: 1.5; margin: 0 0 14px; }
+
   .chart-legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--ink-secondary); margin-bottom: 10px; }
   .chart-legend span { display: inline-flex; align-items: center; gap: 6px; }
   .chart-swatch { width: 14px; height: 3px; border-radius: 2px; display: inline-block; }
@@ -117,6 +123,7 @@
       <h2>BTC-Preis (H1, 10 Tage) &amp; beobachtete OI-Level</h2>
       <span class="panel-note">__CHART_NOTE__</span>
     </div>
+    <p class="level-explainer">Call-Level = höchstes Call-OI oberhalb des aktuellen Preises (Aufwärts-Potenzial/Widerstand), Put-Level = höchstes Put-OI unterhalb des aktuellen Preises (Abwärts-Potenzial/Unterstützung) – zeigt die implizite Markterwartung.</p>
     __CHART_BLOCK__
   </div>
 
@@ -128,7 +135,7 @@
   </div>
 
   <footer>
-    Datenquelle: Deribit Public API, geholt über GitHub Actions. Top-Strike = Strike mit dem höchsten kombinierten Call+Put Open Interest über alle Expiries, aus demselben Snapshot-Archiv wie das 3x-tägliche Tracker-Dashboard.<br>
+    Datenquelle: Deribit Public API, geholt über GitHub Actions. Call-Level = Strike mit dem höchsten Call-Open-Interest oberhalb des aktuellen BTC-Preises, Put-Level = Strike mit dem höchsten Put-Open-Interest unterhalb des Preises, aus demselben Snapshot-Archiv wie das 3x-tägliche Tracker-Dashboard.<br>
     Repo: 8figuresync/deribit-btc-options-tracker — additiver Wochenreport, unabhängig vom 3x-täglichen Tracker.
   </footer>
 </div>

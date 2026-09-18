@@ -80,6 +80,12 @@
   .status-chip.hit { background: var(--call-soft); color: var(--call); }
   .status-chip.not-hit { background: var(--gridline); color: var(--ink-secondary); }
 
+  .direction-chip { display: inline-block; font-family: var(--font-body); font-size: 10.5px; font-weight: 700; padding: 1px 6px; border-radius: 4px; }
+  .direction-chip.call { background: var(--call-soft); color: var(--call); }
+  .direction-chip.put { background: var(--put-soft); color: var(--put); }
+
+  .level-explainer { font-size: 12.5px; color: var(--ink-secondary); line-height: 1.5; margin: 0 0 14px; }
+
   .chart-legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--ink-secondary); margin-bottom: 10px; }
   .chart-legend span { display: inline-flex; align-items: center; gap: 6px; }
   .chart-swatch { width: 14px; height: 3px; border-radius: 2px; display: inline-block; }
@@ -110,13 +116,14 @@
   <h1 class="title">BTC Weekly OI Levels — Snapshot — 2026-09-18</h1>
   <p class="subtitle">Zwischenstand außerhalb des Montag/Samstag-Rhythmus — zeigt die aktuellen Top-Strike-OI-Level und deren Treffer-Status.</p>
 
-  <div class="kpi-row"><div class="kpi"><div class="kpi-label">Aktueller BTC-Preis</div><div class="kpi-value">$77,980</div></div><div class="kpi"><div class="kpi-label">Beobachtete OI-Level</div><div class="kpi-value">1</div></div></div>
+  <div class="kpi-row"><div class="kpi"><div class="kpi-label">Aktueller BTC-Preis</div><div class="kpi-value">$77,980</div></div><div class="kpi"><div class="kpi-label">Beobachtete OI-Level</div><div class="kpi-value">2</div></div></div>
 
   <div class="panel">
     <div class="panel-head">
       <h2>BTC-Preis (H1, 10 Tage) &amp; beobachtete OI-Level</h2>
       <span class="panel-note">Preisdaten folgen ab nächstem Fetch-Lauf</span>
     </div>
+    <p class="level-explainer">Call-Level = höchstes Call-OI oberhalb des aktuellen Preises (Aufwärts-Potenzial/Widerstand), Put-Level = höchstes Put-OI unterhalb des aktuellen Preises (Abwärts-Potenzial/Unterstützung) – zeigt die implizite Markterwartung.</p>
     <div class="empty-note">Noch keine H1-Preisdaten verfügbar, erscheinen ab dem nächsten Fetch-Lauf.</div>
   </div>
 
@@ -124,11 +131,11 @@
     <div class="panel-head">
       <h2>OI-Level im Detail</h2>
     </div>
-    <table class="levels"><thead><tr><th>Strike</th><th>Zuerst beobachtet</th><th>Status</th></tr></thead><tbody><tr><td class="num">70,000</td><td>2026-09-17 18:04:12 UTC</td><td><span class="status-chip not-hit">keine Preisdaten</span></td></tr></tbody></table>
+    <table class="levels"><thead><tr><th>Richtung</th><th>Strike</th><th>Zuerst beobachtet</th><th>Status</th></tr></thead><tbody><tr><td><span class="direction-chip call">Call</span></td><td class="num">80,000</td><td>2026-09-17 19:29:00 UTC</td><td><span class="status-chip not-hit">keine Preisdaten</span></td></tr><tr><td><span class="direction-chip put">Put</span></td><td class="num">60,000</td><td>2026-09-17 19:29:00 UTC</td><td><span class="status-chip not-hit">keine Preisdaten</span></td></tr></tbody></table>
   </div>
 
   <footer>
-    Datenquelle: Deribit Public API, geholt über GitHub Actions. Top-Strike = Strike mit dem höchsten kombinierten Call+Put Open Interest über alle Expiries, aus demselben Snapshot-Archiv wie das 3x-tägliche Tracker-Dashboard.<br>
+    Datenquelle: Deribit Public API, geholt über GitHub Actions. Call-Level = Strike mit dem höchsten Call-Open-Interest oberhalb des aktuellen BTC-Preises, Put-Level = Strike mit dem höchsten Put-Open-Interest unterhalb des Preises, aus demselben Snapshot-Archiv wie das 3x-tägliche Tracker-Dashboard.<br>
     Repo: 8figuresync/deribit-btc-options-tracker — additiver Wochenreport, unabhängig vom 3x-täglichen Tracker.
   </footer>
 </div>

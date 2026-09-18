@@ -4,12 +4,15 @@ the standalone docs/weekly.html page from the archived snapshots.
 
 This is a new, additive report type next to the existing 3x-daily tracker
 (scripts/build_dashboard.py / docs/index.html) — it does not read or write
-any of that tracker's files. It watches which strike concentrates the
-highest combined call+put open interest over time ("top strike") and
-checks whether the BTC-PERPETUAL price later traded through that strike,
-using the hourly price candles fetched by scripts/fetch_deribit.py
-(the btc_h1_candles field). No network access and no third-party
-dependencies.
+any of that tracker's files. For each archived snapshot it tracks two
+separate levels: the strike with the highest call OI among strikes above
+that snapshot's BTC index price ("Call-Level", upside potential /
+resistance) and the strike with the highest put OI among strikes below
+the price ("Put-Level", downside potential / support). This reflects the
+market's implied volatility expectation. It then checks whether the
+BTC-PERPETUAL price later traded through each level, using the hourly
+price candles fetched by scripts/fetch_deribit.py (the btc_h1_candles
+field). No network access and no third-party dependencies.
 """
 import glob
 import json
@@ -19,15 +22,14 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from build_dashboard import aggregate, top_strike_by_oi  # noqa: E402
+from build_dashboard import aggregate  # noqa: E402
 
 SNAPSHOT_GLOB = str(REPO_ROOT / "snapshots" / "*-UTC.json")
 WEEKLY_TEMPLATE_PATH = REPO_ROOT / "scripts" / "weekly_template.html"
 REPORT_DIR = REPO_ROOT / "reports" / "weekly"
 OUT_HTML_PATH = REPO_ROOT / "docs" / "weekly.html"
-MAX_LEVELS = 4
+MAX_LEVELS_PER_SIDE = 2
 HIT_TOLERANCE = 0.0025
-LEVEL_OPACITIES = [1.0, 0.6, 0.4, 0.25]
 
 
 def load_all_snapshots():
@@ -40,15 +42,37 @@ def load_all_snapshots():
     return snapshots
 
 
-def build_top_strike_series(snapshots):
-    series = []
+def call_put_levels_for_snapshot(snapshot, agg):
+    """Return (call_strike, put_strike) for one snapshot: the highest-call-OI
+    strike strictly above the BTC index price, and the highest-put-OI strike
+    strictly below it. Either side is None if no such strike has OI > 0."""
+    price = snapshot.get("btc_index_price")
+    if price is None:
+        return None, None
+
+    call_strike, call_oi = None, None
+    put_strike, put_oi = None, None
+    for strike, row in agg["by_strike"].items():
+        if strike > price and row["call_oi"] > 0:
+            if call_oi is None or row["call_oi"] > call_oi:
+                call_strike, call_oi = strike, row["call_oi"]
+        if strike < price and row["put_oi"] > 0:
+            if put_oi is None or row["put_oi"] > put_oi:
+                put_strike, put_oi = strike, row["put_oi"]
+    return call_strike, put_strike
+
+
+def build_call_put_series(snapshots):
+    call_series = []
+    put_series = []
     for snap in snapshots:
         agg = aggregate(snap)
-        top_strike, top_strike_oi = top_strike_by_oi(agg)
-        if top_strike is None:
-            continue
-        series.append((snap["timestamp_utc"], top_strike))
-    return series
+        call_strike, put_strike = call_put_levels_for_snapshot(snap, agg)
+        if call_strike is not None:
+            call_series.append((snap["timestamp_utc"], call_strike))
+        if put_strike is not None:
+            put_series.append((snap["timestamp_utc"], put_strike))
+    return call_series, put_series
 
 
 def build_segments(series):
@@ -125,11 +149,11 @@ def render_markdown(label, date_str, now, current_price, levels, has_candles):
 
     lines.append("## Top-Strike-Level nach Open Interest")
     lines.append("")
-    lines.append("| Strike | Zuerst beobachtet am | Status |")
-    lines.append("|---|---|---|")
+    lines.append("| Richtung | Strike | Zuerst beobachtet am | Status |")
+    lines.append("|---|---|---|---|")
     for lvl in levels:
         lines.append(
-            f"| {fmt_num(lvl['strike'])} | {fmt_ts(lvl['first_seen_timestamp_utc'])} | {level_status_text(lvl)} |"
+            f"| {lvl['direction']} | {fmt_num(lvl['strike'])} | {fmt_ts(lvl['first_seen_timestamp_utc'])} | {level_status_text(lvl)} |"
         )
     lines.append("")
 
@@ -169,14 +193,16 @@ def render_table_block(levels):
             chip = '<span class="status-chip not-hit">nicht getroffen</span>'
         else:
             chip = '<span class="status-chip not-hit">keine Preisdaten</span>'
+        direction_class = "call" if lvl["direction"] == "Call" else "put"
         rows.append(
-            f'<tr><td class="num">{fmt_num(lvl["strike"])}</td>'
+            f'<tr><td><span class="direction-chip {direction_class}">{lvl["direction"]}</span></td>'
+            f'<td class="num">{fmt_num(lvl["strike"])}</td>'
             f'<td>{fmt_ts(lvl["first_seen_timestamp_utc"])}</td>'
             f"<td>{chip}</td></tr>"
         )
     return (
         '<table class="levels"><thead><tr>'
-        "<th>Strike</th><th>Zuerst beobachtet</th><th>Status</th>"
+        "<th>Richtung</th><th>Strike</th><th>Zuerst beobachtet</th><th>Status</th>"
         "</tr></thead><tbody>" + "".join(rows) + "</tbody></table>"
     )
 
@@ -234,20 +260,21 @@ def render_chart_block(candles, levels):
 
     level_lines = []
     legend_items = []
-    for i, lvl in enumerate(levels[:MAX_LEVELS]):
+    for lvl in levels:
         strike = lvl["strike"]
-        opacity = LEVEL_OPACITIES[i] if i < len(LEVEL_OPACITIES) else LEVEL_OPACITIES[-1]
-        color = "var(--accent)" if i == 0 else "var(--ink-muted)"
+        is_current = lvl["age"] == "current"
+        color = "var(--call)" if lvl["direction"] == "Call" else "var(--put)"
+        opacity = 1.0 if is_current else 0.35
         yy = y(strike)
-        dash = "stroke-dasharray=\"5 4\"" if i > 0 else ""
+        dash = "" if is_current else 'stroke-dasharray="5 4"'
         level_lines.append(
             f'<line x1="{pad_l:.1f}" y1="{yy:.1f}" x2="{w - pad_r:.1f}" y2="{yy:.1f}" '
             f'stroke="{color}" stroke-width="2" {dash} opacity="{opacity}" />'
             f'<text class="chart-level-label" x="{w - pad_r + 6:.1f}" y="{yy + 4:.1f}" fill="{color}" opacity="{opacity}">{fmt_num(strike)}</text>'
         )
-        legend_label = "aktuellstes Level" if i == 0 else f"{i + 1}. älteres Level"
+        legend_label = f"{lvl['direction']}-Level" + ("" if is_current else " (vorheriges)")
         legend_items.append(
-            f'<span><i class="chart-swatch" style="background:{color};opacity:{opacity}"></i>{legend_label} ({fmt_num(strike)})</span>'
+            f'<span><i class="chart-swatch" style="background:{color};opacity:{opacity}"></i>{legend_label} {fmt_num(strike)}</span>'
         )
 
     return f"""
@@ -299,23 +326,41 @@ def render_html(label, date_str, current_price, levels, candles):
     return html
 
 
+def build_levels(call_segments, put_segments, candles):
+    call_latest = list(reversed(call_segments[-MAX_LEVELS_PER_SIDE:]))
+    put_latest = list(reversed(put_segments[-MAX_LEVELS_PER_SIDE:]))
+    levels = []
+    for i, seg in enumerate(call_latest):
+        levels.append({
+            **seg,
+            **check_level_hit(seg["strike"], candles),
+            "direction": "Call",
+            "age": "current" if i == 0 else "previous",
+        })
+    for i, seg in enumerate(put_latest):
+        levels.append({
+            **seg,
+            **check_level_hit(seg["strike"], candles),
+            "direction": "Put",
+            "age": "current" if i == 0 else "previous",
+        })
+    return levels
+
+
 def main():
     snapshots = load_all_snapshots()
     if not snapshots:
         raise SystemExit("Keine Snapshots unter snapshots/*-UTC.json gefunden — Weekly Report nicht erzeugt.")
 
-    series = build_top_strike_series(snapshots)
-    all_segments = build_segments(series)
-    latest_segments = list(reversed(all_segments[-MAX_LEVELS:]))
+    call_series, put_series = build_call_put_series(snapshots)
+    call_segments = build_segments(call_series)
+    put_segments = build_segments(put_series)
 
     latest_snapshot = snapshots[-1]
     current_price = latest_snapshot.get("btc_index_price")
     candles = latest_snapshot.get("btc_h1_candles") or []
 
-    levels = [
-        {**seg, **check_level_hit(seg["strike"], candles)}
-        for seg in latest_segments
-    ]
+    levels = build_levels(call_segments, put_segments, candles)
 
     now = datetime.now(timezone.utc)
     slug, label = report_type_for_weekday(now.isoweekday())
