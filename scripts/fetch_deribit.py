@@ -22,12 +22,17 @@ CHART_URL_TEMPLATE = (
     "https://www.deribit.com/api/v2/public/get_tradingview_chart_data"
     "?instrument_name=BTC-PERPETUAL&resolution=1D&start_timestamp={start}&end_timestamp={end}"
 )
+H1_CHART_URL_TEMPLATE = (
+    "https://www.deribit.com/api/v2/public/get_tradingview_chart_data"
+    "?instrument_name=BTC-PERPETUAL&resolution=60&start_timestamp={start}&end_timestamp={end}"
+)
 OUT_PATH = Path("snapshots/incoming.json")
 MIN_INSTRUMENTS = 50
 MAX_ATTEMPTS = 3
 TIMEOUT_SECONDS = 30
 WEEKLY_HISTORY_DAYS = 90
 WEEKLY_RANGES_KEEP = 10
+H1_HISTORY_DAYS = 10
 
 
 def fetch_json(url):
@@ -119,6 +124,32 @@ def fetch_weekly_ranges(current_price):
     return weekly[-WEEKLY_RANGES_KEEP:]
 
 
+def fetch_h1_candles():
+    now = datetime.now(timezone.utc)
+    end_ms = int(now.timestamp() * 1000)
+    start_ms = int((now - timedelta(days=H1_HISTORY_DAYS)).timestamp() * 1000)
+    url = H1_CHART_URL_TEMPLATE.format(start=start_ms, end=end_ms)
+    payload = fetch_json(url)
+    result = payload.get("result")
+    if not isinstance(result, dict) or result.get("status") != "ok":
+        raise RuntimeError(f"Unerwartete/fehlerhafte Antwort von get_tradingview_chart_data (H1): {result!r}")
+
+    ticks = result.get("ticks") or []
+    closes = result.get("close") or []
+    if not ticks or len(ticks) != len(closes):
+        raise RuntimeError("Unvollstaendige/leere H1-Candle-Arrays von get_tradingview_chart_data")
+
+    candles = [
+        {
+            "ts_utc": datetime.fromtimestamp(ts_ms / 1000, tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "close": close,
+        }
+        for ts_ms, close in zip(ticks, closes)
+    ]
+    candles.sort(key=lambda c: c["ts_utc"])
+    return candles
+
+
 def main():
     payload = fetch()
 
@@ -146,12 +177,14 @@ def main():
 
     index_price = fetch_index_price()
     weekly_ranges = fetch_weekly_ranges(index_price)
+    h1_candles = fetch_h1_candles()
 
     snapshot = {
         "timestamp_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "instruments": instruments,
         "btc_index_price": index_price,
         "btc_weekly_ranges": weekly_ranges,
+        "btc_h1_candles": h1_candles,
     }
 
     OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
@@ -162,7 +195,7 @@ def main():
     print(
         f"OK: {len(instruments)} Instrumente gespeichert nach {OUT_PATH} "
         f"(timestamp_utc={snapshot['timestamp_utc']}, btc_index_price={index_price}, "
-        f"wochen={len(weekly_ranges)})"
+        f"wochen={len(weekly_ranges)}, h1_candles={len(h1_candles)})"
     )
 
 
