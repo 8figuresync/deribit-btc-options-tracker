@@ -7,8 +7,8 @@ name: Fetch Deribit BTC options snapshot
 # session to read from snapshots/incoming.json.
 on:
   schedule:
-    # 10 minutes before the tracker's own 06:00 / 14:00 / 22:00 Europe/Berlin runs.
-    - cron: '50 3,11,19 * * *'
+    # Hourly, 10 minutes before the tracker's own hourly run (minute 51).
+    - cron: '41 * * * *'
   workflow_dispatch: {}
 
 permissions:
