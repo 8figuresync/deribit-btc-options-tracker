@@ -141,22 +141,10 @@ def build_record(snapshot, agg, prev_agg):
     else:
         expiry_rows.sort(key=lambda r: expiry_sort_key(r["expiry"]))
 
-    # OI-nach-Expiration-Panel: sortiere nach Naehe des Top-Call-/Top-Put-Strikes
-    # zum aktuellen BTC-Preis (naehster Strike zuerst). Stable sort, also bleibt
-    # die obige Sortierung als Fallback erhalten, wenn der Preis fehlt oder eine
-    # Expiry weder Call- noch Put-Level hat.
-    btc_index_price = snapshot.get("btc_index_price")
-    if btc_index_price is not None:
-        def _price_distance_key(r):
-            dists = []
-            if r["top_call_strike"] is not None:
-                dists.append(abs(r["top_call_strike"] - btc_index_price))
-            if r["top_put_strike"] is not None:
-                dists.append(abs(r["top_put_strike"] - btc_index_price))
-            return (1, 0.0) if not dists else (0, min(dists))
-        expiry_rows_by_price_distance = sorted(expiry_rows, key=_price_distance_key)
-    else:
-        expiry_rows_by_price_distance = expiry_rows
+    # OI-nach-Expiration-Panel: chronologisch nach Ablaufdatum (naechster Verfall
+    # zuerst), wie das Basis-Panel. Die Sub-Beschriftung mit Top-Call-/Top-Put-
+    # Strike bleibt unabhaengig davon bestehen.
+    expiry_rows_chronological = sorted(expiry_rows, key=lambda r: expiry_sort_key(r["expiry"]))
 
     strike_rows = []
     for strike, row in agg["by_strike"].items():
@@ -227,7 +215,7 @@ def build_record(snapshot, agg, prev_agg):
                       for k, v in d.items()} if d else None,
         },
         "by_expiry": expiry_rows,
-        "by_expiry_oi": expiry_rows_by_price_distance,
+        "by_expiry_oi": expiry_rows_chronological,
         "by_strike": strike_rows,
         "movers": movers,
     }
