@@ -18,6 +18,8 @@ SNAPSHOT_GLOB = str(REPO_ROOT / "snapshots" / "*-UTC.json")
 TEMPLATE_PATH = REPO_ROOT / "scripts" / "dashboard_template.html"
 OUT_PATH = REPO_ROOT / "docs" / "index.html"
 MAX_HISTORY = 60
+MAX_LEVELS_PER_SIDE = 2
+HIT_TOLERANCE = 0.0025
 
 MONTHS = {"JAN": 1, "FEB": 2, "MAR": 3, "APR": 4, "MAY": 5, "JUN": 6,
           "JUL": 7, "AUG": 8, "SEP": 9, "OCT": 10, "NOV": 11, "DEC": 12}
@@ -34,7 +36,7 @@ def parse_instrument(name):
     return parts[1], float(parts[2]), parts[3]
 
 
-def load_snapshots():
+def load_all_snapshots():
     files = sorted(glob.glob(SNAPSHOT_GLOB))
     snapshots = []
     for path in files:
@@ -42,7 +44,11 @@ def load_snapshots():
             data = json.load(f)
         snapshots.append(data)
     snapshots.sort(key=lambda s: s["timestamp_utc"])
-    return snapshots[-MAX_HISTORY:]
+    return snapshots
+
+
+def load_snapshots():
+    return load_all_snapshots()[-MAX_HISTORY:]
 
 
 def aggregate(snapshot):
@@ -197,33 +203,106 @@ def build_record(snapshot, agg, prev_agg):
     }
 
 
-def top_strike_by_oi(agg):
-    top_strike = None
-    top_strike_oi = None
-    for strike, row in agg["by_strike"].items():
-        oi = row["call_oi"] + row["put_oi"]
-        if oi <= 0:
-            continue
-        if top_strike_oi is None or oi > top_strike_oi:
-            top_strike = strike
-            top_strike_oi = oi
-    return top_strike, top_strike_oi
-
-
-def build_market_delta_point(snapshot, agg):
-    top_strike, top_strike_oi = top_strike_by_oi(agg)
+def build_market_delta_point(snapshot):
     return {
         "timestamp_utc": snapshot["timestamp_utc"],
         "btc_index_price": snapshot.get("btc_index_price"),
-        "top_strike": top_strike,
-        "top_strike_oi": round(top_strike_oi, 2) if top_strike_oi is not None else None,
     }
 
 
+def call_put_levels_for_snapshot(snapshot, agg):
+    """Return (call_strike, put_strike) for one snapshot: the highest-call-OI
+    strike strictly above the BTC index price, and the highest-put-OI strike
+    strictly below it. Either side is None if no such strike has OI > 0."""
+    price = snapshot.get("btc_index_price")
+    if price is None:
+        return None, None
+
+    call_strike, call_oi = None, None
+    put_strike, put_oi = None, None
+    for strike, row in agg["by_strike"].items():
+        if strike > price and row["call_oi"] > 0:
+            if call_oi is None or row["call_oi"] > call_oi:
+                call_strike, call_oi = strike, row["call_oi"]
+        if strike < price and row["put_oi"] > 0:
+            if put_oi is None or row["put_oi"] > put_oi:
+                put_strike, put_oi = strike, row["put_oi"]
+    return call_strike, put_strike
+
+
+def build_call_put_series(snapshots):
+    call_series = []
+    put_series = []
+    for snap in snapshots:
+        agg = aggregate(snap)
+        call_strike, put_strike = call_put_levels_for_snapshot(snap, agg)
+        if call_strike is not None:
+            call_series.append((snap["timestamp_utc"], call_strike))
+        if put_strike is not None:
+            put_series.append((snap["timestamp_utc"], put_strike))
+    return call_series, put_series
+
+
+def build_segments(series):
+    segments = []
+    for ts, strike in series:
+        if segments and segments[-1]["strike"] == strike:
+            continue
+        segments.append({"strike": strike, "first_seen_timestamp_utc": ts})
+    return segments
+
+
+def check_level_hit(strike, candles):
+    if not candles:
+        return {"status": "no_data"}
+    closes = [c["close"] for c in candles]
+    lo, hi = min(closes), max(closes)
+    if not (lo <= strike <= hi):
+        return {"status": "not_hit"}
+    for c in candles:
+        if abs(c["close"] - strike) / strike <= HIT_TOLERANCE:
+            return {"status": "hit", "hit_ts": c["ts_utc"]}
+    return {"status": "not_hit"}
+
+
+def build_levels(call_segments, put_segments, candles):
+    """Up to MAX_LEVELS_PER_SIDE most recent distinct Call/Put OI levels
+    (current + previous), each with its hit-status against the last H1
+    candles."""
+    call_latest = list(reversed(call_segments[-MAX_LEVELS_PER_SIDE:]))
+    put_latest = list(reversed(put_segments[-MAX_LEVELS_PER_SIDE:]))
+    levels = []
+    for i, seg in enumerate(call_latest):
+        levels.append({
+            **seg,
+            **check_level_hit(seg["strike"], candles),
+            "direction": "Call",
+            "age": "current" if i == 0 else "previous",
+        })
+    for i, seg in enumerate(put_latest):
+        levels.append({
+            **seg,
+            **check_level_hit(seg["strike"], candles),
+            "direction": "Put",
+            "age": "current" if i == 0 else "previous",
+        })
+    return levels
+
+
+def build_oi_levels(all_snapshots):
+    latest = all_snapshots[-1]
+    candles = latest.get("btc_h1_candles") or []
+    call_series, put_series = build_call_put_series(all_snapshots)
+    call_segments = build_segments(call_series)
+    put_segments = build_segments(put_series)
+    return build_levels(call_segments, put_segments, candles)
+
+
 def main():
-    snapshots = load_snapshots()
-    if not snapshots:
+    all_snapshots = load_all_snapshots()
+    if not all_snapshots:
         raise SystemExit("Keine Snapshots unter snapshots/*-UTC.json gefunden — Dashboard nicht erzeugt.")
+    snapshots = all_snapshots[-MAX_HISTORY:]
 
     records = []
     market_delta = []
@@ -231,16 +310,19 @@ def main():
     for snap in snapshots:
         agg = aggregate(snap)
         records.append(build_record(snap, agg, prev_agg))
-        market_delta.append(build_market_delta_point(snap, agg))
+        market_delta.append(build_market_delta_point(snap))
         prev_agg = agg
+
+    oi_levels = build_oi_levels(all_snapshots)
 
     template = TEMPLATE_PATH.read_text()
     html = template.replace("__SNAPSHOTS_JSON__", json.dumps(records, separators=(",", ":")))
     html = html.replace("__MARKET_DELTA_JSON__", json.dumps(market_delta, separators=(",", ":")))
+    html = html.replace("__OI_LEVELS_JSON__", json.dumps(oi_levels, separators=(",", ":")))
 
     OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     OUT_PATH.write_text(html)
-    print(f"OK: {OUT_PATH} aus {len(records)} Snapshot(s) erzeugt (neuester: {records[-1]['timestamp_utc']})")
+    print(f"OK: {OUT_PATH} aus {len(records)} Snapshot(s) erzeugt (neuester: {records[-1]['timestamp_utc']}, {len(oi_levels)} OI-Level)")
 
 
 if __name__ == "__main__":
