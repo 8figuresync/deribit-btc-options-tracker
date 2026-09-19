@@ -67,17 +67,27 @@ def aggregate(snapshot):
         vol_usd = inst.get("volume_usd") or 0
         oi = inst.get("open_interest") or 0
 
-        row = by_expiry.setdefault(expiry, {"volume": 0.0, "call_oi": 0.0, "put_oi": 0.0})
+        row = by_expiry.setdefault(expiry, {
+            "volume": 0.0, "call_oi": 0.0, "put_oi": 0.0,
+            "top_call_strike": None, "top_call_oi": 0.0,
+            "top_put_strike": None, "top_put_oi": 0.0,
+        })
         row["volume"] += vol
         strow = by_strike.setdefault(strike, {"call_oi": 0.0, "put_oi": 0.0})
         if typ == "C":
             row["call_oi"] += oi
             strow["call_oi"] += oi
             total_call_oi += oi
+            if oi > row["top_call_oi"]:
+                row["top_call_oi"] = oi
+                row["top_call_strike"] = strike
         else:
             row["put_oi"] += oi
             strow["put_oi"] += oi
             total_put_oi += oi
+            if oi > row["top_put_oi"]:
+                row["top_put_oi"] = oi
+                row["top_put_strike"] = strike
 
         total_volume += vol
         total_volume_usd += vol_usd
@@ -123,11 +133,30 @@ def build_record(snapshot, agg, prev_agg):
             "vol_delta": round(vol_delta, 2) if vol_delta is not None else None,
             "call_oi_delta": round(call_delta, 2) if call_delta is not None else None,
             "put_oi_delta": round(put_delta, 2) if put_delta is not None else None,
+            "top_call_strike": row["top_call_strike"],
+            "top_put_strike": row["top_put_strike"],
         })
     if prev_agg is not None:
         expiry_rows.sort(key=lambda r: -abs((r["vol_delta"] or 0) + (r["call_oi_delta"] or 0) + (r["put_oi_delta"] or 0)))
     else:
         expiry_rows.sort(key=lambda r: expiry_sort_key(r["expiry"]))
+
+    # OI-nach-Expiration-Panel: sortiere nach Naehe des Top-Call-/Top-Put-Strikes
+    # zum aktuellen BTC-Preis (naehster Strike zuerst). Stable sort, also bleibt
+    # die obige Sortierung als Fallback erhalten, wenn der Preis fehlt oder eine
+    # Expiry weder Call- noch Put-Level hat.
+    btc_index_price = snapshot.get("btc_index_price")
+    if btc_index_price is not None:
+        def _price_distance_key(r):
+            dists = []
+            if r["top_call_strike"] is not None:
+                dists.append(abs(r["top_call_strike"] - btc_index_price))
+            if r["top_put_strike"] is not None:
+                dists.append(abs(r["top_put_strike"] - btc_index_price))
+            return (1, 0.0) if not dists else (0, min(dists))
+        expiry_rows_by_price_distance = sorted(expiry_rows, key=_price_distance_key)
+    else:
+        expiry_rows_by_price_distance = expiry_rows
 
     strike_rows = []
     for strike, row in agg["by_strike"].items():
@@ -198,6 +227,7 @@ def build_record(snapshot, agg, prev_agg):
                       for k, v in d.items()} if d else None,
         },
         "by_expiry": expiry_rows,
+        "by_expiry_oi": expiry_rows_by_price_distance,
         "by_strike": strike_rows,
         "movers": movers,
     }
