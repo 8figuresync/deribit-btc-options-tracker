@@ -8,8 +8,10 @@ with one entry per snapshot plus deltas vs. the previous one. No network
 access and no third-party dependencies — safe to run as part of the
 scheduled tracker routine (Bash/Read/Write only).
 """
+import datetime as dt
 import glob
 import json
+import math
 import re
 from pathlib import Path
 
@@ -20,6 +22,8 @@ OUT_PATH = REPO_ROOT / "docs" / "index.html"
 MAX_HISTORY = 60
 MAX_LEVELS_PER_SIDE = 2
 HIT_TOLERANCE = 0.0025
+OTM_MAX_DAYS = 7
+OTM_BUCKETS = [10, 20, 30, 40, 50, 60, 70, 80, 90]  # 90 == "90%+" bucket
 
 MONTHS = {"JAN": 1, "FEB": 2, "MAR": 3, "APR": 4, "MAY": 5, "JUN": 6,
           "JUL": 7, "AUG": 8, "SEP": 9, "OCT": 10, "NOV": 11, "DEC": 12}
@@ -29,6 +33,86 @@ def expiry_sort_key(expiry):
     m = re.match(r"(\d+)([A-Z]{3})(\d+)", expiry)
     day, mon, yr = int(m.group(1)), MONTHS[m.group(2)], int(m.group(3))
     return (2000 + yr, mon, day)
+
+
+def expiry_to_datetime(expiry):
+    """Deribit expiries settle at 08:00 UTC."""
+    m = re.match(r"(\d+)([A-Z]{3})(\d+)", expiry)
+    day, mon, yr = int(m.group(1)), MONTHS[m.group(2)], int(m.group(3))
+    return dt.datetime(2000 + yr, mon, day, 8, 0, 0, tzinfo=dt.timezone.utc)
+
+
+def otm_bucket_label(bucket):
+    return "90%+" if bucket == 90 else f"{bucket}-{bucket + 9}%"
+
+
+def otm_heatmap_max_cell(grid):
+    best = None
+    for bucket_idx, row in enumerate(grid):
+        for day_idx, value in enumerate(row):
+            if value > 0 and (best is None or value > best[2]):
+                best = (bucket_idx, day_idx, value)
+    if best is None:
+        return None
+    bucket_idx, day_idx, value = best
+    return {
+        "days_to_expiry": day_idx + 1,
+        "otm_bucket": otm_bucket_label(OTM_BUCKETS[bucket_idx]),
+        "value": round(value, 2),
+    }
+
+
+def build_otm_heatmap(snapshot):
+    """OTM-Szenario-Heatmap: OI von Calls/Puts, die 1-7 Tage vor Verfall
+    stehen, gebucketed nach OTM-Abstand vom aktuellen BTC-Preis (10er-Schritte,
+    ab 10%, gedeckelt bei '90%+'). Zwei 7x9-Gitter (Tage x OTM-Bucket)."""
+    price = snapshot.get("btc_index_price")
+    if price is None:
+        return {"available": False}
+
+    snap_ts = dt.datetime.fromisoformat(snapshot["timestamp_utc"].replace("Z", "+00:00"))
+    call_grid = [[0.0] * OTM_MAX_DAYS for _ in OTM_BUCKETS]
+    put_grid = [[0.0] * OTM_MAX_DAYS for _ in OTM_BUCKETS]
+
+    for inst in snapshot["instruments"]:
+        expiry, strike, typ = parse_instrument(inst["instrument_name"])
+        raw_days = (expiry_to_datetime(expiry) - snap_ts).total_seconds() / 86400.0
+        if raw_days <= 0:
+            continue  # bereits verfallen
+        days_to_expiry = max(math.ceil(raw_days), 1)
+        if days_to_expiry > OTM_MAX_DAYS:
+            continue
+
+        if typ == "C":
+            if strike <= price:
+                continue
+            otm_pct = (strike - price) / price * 100
+        else:
+            if strike >= price:
+                continue
+            otm_pct = (price - strike) / price * 100
+        if otm_pct < 10:
+            continue
+
+        bucket = min(int(otm_pct // 10) * 10, 90)
+        bucket_idx = OTM_BUCKETS.index(bucket)
+        day_idx = days_to_expiry - 1
+        oi = inst.get("open_interest") or 0
+        if typ == "C":
+            call_grid[bucket_idx][day_idx] += oi
+        else:
+            put_grid[bucket_idx][day_idx] += oi
+
+    call_grid = [[round(v, 2) for v in row] for row in call_grid]
+    put_grid = [[round(v, 2) for v in row] for row in put_grid]
+
+    return {
+        "available": True,
+        "call_grid": call_grid,
+        "put_grid": put_grid,
+        "call_max": otm_heatmap_max_cell(call_grid),
+        "put_max": otm_heatmap_max_cell(put_grid),
+    }
 
 
 def parse_instrument(name):
@@ -218,6 +302,7 @@ def build_record(snapshot, agg, prev_agg):
         "by_expiry_oi": expiry_rows_chronological,
         "by_strike": strike_rows,
         "movers": movers,
+        "otm_heatmap": build_otm_heatmap(snapshot),
     }
 
 

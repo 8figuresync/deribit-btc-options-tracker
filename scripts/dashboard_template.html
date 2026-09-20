@@ -163,12 +163,21 @@
 
   footer { color: var(--ink-muted); font-size: 11.5px; text-align: center; margin-top: 30px; line-height: 1.6; }
 
+  .otm-heatmap-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .otm-heatmap-title { font-family: var(--font-body); font-size: 12.5px; font-weight: 700; margin-bottom: 10px; }
+  .otm-heatmap-grid { display: grid; grid-template-columns: 58px repeat(7, 1fr); gap: 3px; margin-bottom: 10px; }
+  .otm-heatmap-daylabel { font-family: var(--font-display); font-size: 10px; color: var(--ink-muted); text-align: center; padding-bottom: 2px; }
+  .otm-heatmap-rowlabel { font-family: var(--font-display); font-size: 10px; color: var(--ink-secondary); display: flex; align-items: center; justify-content: flex-end; padding-right: 6px; white-space: nowrap; }
+  .otm-heatmap-cell { aspect-ratio: 1; min-height: 26px; border-radius: 4px; background: var(--gridline); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 9.5px; font-variant-numeric: tabular-nums; }
+  .otm-heatmap-hint { font-size: 11.5px; color: var(--ink-muted); font-family: var(--font-display); }
+
   @media (max-width: 760px) {
     .kpi-row { grid-template-columns: repeat(2, 1fr); }
     .grid-2 { grid-template-columns: 1fr; }
     .barrow { grid-template-columns: 54px 1fr; }
     #chart-expiry-oi .barrow { grid-template-columns: 92px 1fr; }
     table.moves { display: block; overflow-x: auto; }
+    .otm-heatmap-wrap { grid-template-columns: 1fr; }
   }
 </style>
 
@@ -235,6 +244,14 @@
     </div>
     <div class="legend" style="margin-bottom:12px;"><span><i class="swatch call"></i>Calls</span><span><i class="swatch put"></i>Puts</span></div>
     <div class="barlist scrollbox" id="chart-strike-oi"></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <h2>OTM-Szenario-Heatmap (1–7 Tage bis Verfall)</h2>
+    </div>
+    <p class="level-explainer">Zeigt, wo Open Interest bei aus dem Geld liegenden Optionen konzentriert ist, gestaffelt nach Tagen bis Verfall und OTM-Abstand vom aktuellen Preis – hilft einzuschätzen, welches Szenario in der kommenden Woche am ehesten Marktbewegung/Hedging-Impact auslösen könnte.</p>
+    <div id="otm-heatmap-content"></div>
   </div>
 
   <div class="panel">
@@ -475,6 +492,66 @@ function renderMarketDelta() {
   renderLevelsTable();
 }
 
+function otmBucketLabel(bucket) {
+  return bucket === 90 ? "90%+" : `${bucket}-${bucket + 9}%`;
+}
+
+function otmHeatmapGrid(grid, colorVar, maxVal) {
+  const days = [1, 2, 3, 4, 5, 6, 7];
+  const buckets = [10, 20, 30, 40, 50, 60, 70, 80, 90];
+  const dayHeader = days.map(d => `<div class="otm-heatmap-daylabel">${d}d</div>`).join("");
+  const rows = buckets.map((b, bi) => {
+    const rowLabel = `<div class="otm-heatmap-rowlabel">${otmBucketLabel(b)}</div>`;
+    const cells = days.map((d, di) => {
+      const val = grid[bi][di];
+      const intensity = maxVal > 0 ? val / maxVal : 0;
+      const style = val > 0
+        ? `background:color-mix(in srgb, ${colorVar} ${Math.max(intensity * 100, 8).toFixed(0)}%, var(--surface));`
+        : "";
+      const label = val > 0 ? fmt(val, 0) : "";
+      return `<div class="otm-heatmap-cell" style="${style}" title="${d}d bis Verfall · ${otmBucketLabel(b)} OTM · ${fmt(val,0)} BTC">
+        <span style="color:#fff;mix-blend-mode:difference;">${label}</span>
+      </div>`;
+    }).join("");
+    return rowLabel + cells;
+  }).join("");
+  return `<div class="otm-heatmap-grid"><div></div>${dayHeader}${rows}</div>`;
+}
+
+function otmMaxHint(maxCell, label) {
+  if (!maxCell) return `<div class="otm-heatmap-hint">Keine Konzentration in den nächsten 7 Tagen (kein Instrument &ge;10% OTM).</div>`;
+  return `<div class="otm-heatmap-hint">Größte Konzentration: ${maxCell.days_to_expiry} Tag(e) bis Verfall, ${maxCell.otm_bucket} OTM, ${fmt(maxCell.value,0)} BTC ${label}-OI.</div>`;
+}
+
+function renderOtmHeatmap(snap) {
+  const el = document.getElementById("otm-heatmap-content");
+  const h = snap.otm_heatmap;
+  if (!h || !h.available) {
+    el.innerHTML = `<div class="empty-note">Kein Preis im Snapshot verfügbar.</div>`;
+    return;
+  }
+  const callMax = Math.max(0, ...h.call_grid.flat());
+  const putMax = Math.max(0, ...h.put_grid.flat());
+  if (callMax === 0 && putMax === 0) {
+    el.innerHTML = `<div class="empty-note">Keine Instrumente mit ≥10% OTM in den nächsten 7 Tagen bis Verfall.</div>`;
+    return;
+  }
+  el.innerHTML = `
+    <div class="otm-heatmap-wrap">
+      <div class="otm-heatmap">
+        <div class="otm-heatmap-title" style="color:var(--call)">OTM Calls (Aufwärts-Potenzial)</div>
+        ${otmHeatmapGrid(h.call_grid, "var(--call)", callMax)}
+        ${otmMaxHint(h.call_max, "Call")}
+      </div>
+      <div class="otm-heatmap">
+        <div class="otm-heatmap-title" style="color:var(--put)">OTM Puts (Abwärts-Potenzial)</div>
+        ${otmHeatmapGrid(h.put_grid, "var(--put)", putMax)}
+        ${otmMaxHint(h.put_max, "Put")}
+      </div>
+    </div>
+  `;
+}
+
 function render() {
   const snap = SNAPSHOTS[selectedIndex];
   const d = snap.kpi.delta;
@@ -572,6 +649,7 @@ function render() {
   }
 
   renderBtcPrice(snap);
+  renderOtmHeatmap(snap);
 }
 
 renderSelector();
