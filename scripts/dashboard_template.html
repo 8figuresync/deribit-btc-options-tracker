@@ -634,9 +634,9 @@ function render() {
   document.getElementById("movers-note").textContent = snap.is_baseline ? "Top 15 (Baseline)" : "Top 15 nach |Δ Volumen|";
   document.getElementById("movers-head").innerHTML = snap.is_baseline
     ? `<th>Instrument</th><th>Expiry</th><th>Strike</th><th>Typ</th><th style="text-align:right">Volumen</th>`
-    : `<th>Instrument</th><th>Expiry</th><th>Strike</th><th>Typ</th><th style="text-align:right">Vorher</th><th style="text-align:right">Jetzt</th><th style="text-align:right">Δ</th><th style="text-align:right">Δ %</th>`;
+    : `<th>Instrument</th><th>Expiry</th><th>Strike</th><th>Typ</th><th style="text-align:right">Vorher</th><th style="text-align:right">Jetzt</th><th style="text-align:right">Δ</th><th style="text-align:right">Δ %</th><th style="text-align:right" title="Volumenänderung seit 00:00 UTC+2">Δ heute</th>`;
   if (snap.movers.length === 0) {
-    document.getElementById("movers-body").innerHTML = `<tr><td colspan="8" class="empty-note">Keine relevanten Änderungen.</td></tr>`;
+    document.getElementById("movers-body").innerHTML = `<tr><td colspan="${snap.is_baseline ? 5 : 9}" class="empty-note">Keine relevanten Änderungen.</td></tr>`;
   } else {
     document.getElementById("movers-body").innerHTML = snap.movers.map(m => snap.is_baseline ? `
       <tr><td>${m.name}</td><td>${m.expiry}</td><td class="num">${fmt(m.strike,0)}</td>
@@ -646,7 +646,8 @@ function render() {
       <tr><td>${m.name}</td><td>${m.expiry}</td><td class="num">${fmt(m.strike,0)}</td>
       <td><span class="type-chip ${m.type}">${m.type === "C" ? "Call" : "Put"}</span></td>
       <td class="num">${fmt(m.before,2)}</td><td class="num">${fmt(m.now,2)}</td>
-      <td class="num">${fmtSigned(m.delta,2)}</td><td class="num">${m.delta_pct === null ? "–" : fmtSigned(m.delta_pct,1) + "%"}</td></tr>
+      <td class="num">${fmtSigned(m.delta,2)}</td><td class="num">${m.delta_pct === null ? "–" : fmtSigned(m.delta_pct,1) + "%"}</td>
+      <td class="num" title="seit 00:00 UTC+2">${fmtSigned(m.day_delta,2)}</td></tr>
     `).join("");
   }
 

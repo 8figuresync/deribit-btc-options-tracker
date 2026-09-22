@@ -135,6 +135,31 @@ def load_snapshots():
     return load_all_snapshots()[-MAX_HISTORY:]
 
 
+UTC_PLUS_2 = dt.timezone(dt.timedelta(hours=2))
+
+
+def local_date_utc_plus_2(timestamp_utc):
+    """Calendar date of a snapshot timestamp in the FIXED UTC+2 offset
+    (not DST-adjusted Europe/Berlin) — used to define 'Tagesbeginn' (00:00
+    UTC+2, i.e. 22:00 UTC of the previous day)."""
+    ts = dt.datetime.fromisoformat(timestamp_utc.replace("Z", "+00:00"))
+    return ts.astimezone(UTC_PLUS_2).date()
+
+
+def build_day_start_map(all_snapshots):
+    """Map each UTC+2 calendar date to its earliest archived snapshot.
+    all_snapshots must be chronologically sorted (as load_all_snapshots()
+    returns it), so the first snapshot seen for a date is its Tagesbeginn
+    baseline. A date with no snapshot before the run's first-ever archive
+    naturally maps to that first snapshot itself (day-delta = 0)."""
+    day_start = {}
+    for snap in all_snapshots:
+        date = local_date_utc_plus_2(snap["timestamp_utc"])
+        if date not in day_start:
+            day_start[date] = snap
+    return day_start
+
+
 def aggregate(snapshot):
     by_expiry = {}
     by_strike = {}
@@ -191,7 +216,7 @@ def aggregate(snapshot):
     }
 
 
-def build_record(snapshot, agg, prev_agg):
+def build_record(snapshot, agg, prev_agg, day_start_vol_by_instrument):
     d = None
     if prev_agg is not None:
         d = {
@@ -266,10 +291,14 @@ def build_record(snapshot, agg, prev_agg):
             if delta == 0:
                 continue
             meta = now or before
+            day_before = day_start_vol_by_instrument.get(name)
+            day_volume_before = day_before["volume"] if day_before else 0.0
             movers.append({
                 "name": name, "expiry": meta["expiry"], "strike": meta["strike"], "type": meta["type"],
                 "before": round(before_vol, 2), "now": round(now_vol, 2), "delta": round(delta, 2),
                 "delta_pct": round((delta / before_vol) * 100, 1) if before_vol else None,
+                "day_volume_before": round(day_volume_before, 2),
+                "day_delta": round(now_vol - day_volume_before, 2),
             })
         movers.sort(key=lambda m: -abs(m["delta"]))
         movers = movers[:15]
@@ -277,9 +306,13 @@ def build_record(snapshot, agg, prev_agg):
         top = sorted(agg["vol_by_instrument"].items(), key=lambda kv: -kv[1]["volume"])[:15]
         top = [(n, v) for n, v in top if v["volume"] != 0]
         for name, v in top:
+            day_before = day_start_vol_by_instrument.get(name)
+            day_volume_before = day_before["volume"] if day_before else 0.0
             movers.append({
                 "name": name, "expiry": v["expiry"], "strike": v["strike"], "type": v["type"],
                 "before": None, "now": round(v["volume"], 2), "delta": None, "delta_pct": None,
+                "day_volume_before": round(day_volume_before, 2),
+                "day_delta": round(v["volume"] - day_volume_before, 2),
             })
 
     return {
@@ -407,12 +440,23 @@ def main():
         raise SystemExit("Keine Snapshots unter snapshots/*-UTC.json gefunden — Dashboard nicht erzeugt.")
     snapshots = all_snapshots[-MAX_HISTORY:]
 
+    day_start_map = build_day_start_map(all_snapshots)
+    day_start_vol_cache = {}
+
     records = []
     market_delta = []
     prev_agg = None
     for snap in snapshots:
         agg = aggregate(snap)
-        records.append(build_record(snap, agg, prev_agg))
+        day_start_snap = day_start_map[local_date_utc_plus_2(snap["timestamp_utc"])]
+        if day_start_snap["timestamp_utc"] == snap["timestamp_utc"]:
+            day_start_vol = agg["vol_by_instrument"]
+        else:
+            key = day_start_snap["timestamp_utc"]
+            if key not in day_start_vol_cache:
+                day_start_vol_cache[key] = aggregate(day_start_snap)["vol_by_instrument"]
+            day_start_vol = day_start_vol_cache[key]
+        records.append(build_record(snap, agg, prev_agg, day_start_vol))
         market_delta.append(build_market_delta_point(snap))
         prev_agg = agg
 
