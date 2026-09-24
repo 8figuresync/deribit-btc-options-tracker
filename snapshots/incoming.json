@@ -1,5 +1,5 @@
 {
-  "timestamp_utc": "2026-09-24T22:46:52Z",
+  "timestamp_utc": "2026-09-24T23:46:25Z",
   "instruments": [
     {
       "instrument_name": "BTC-25DEC26-220000-P",
@@ -81,8 +81,8 @@
     },
     {
       "instrument_name": "BTC-25SEP26-68000-C",
-      "volume": 251.9,
-      "volume_usd": 4074022.0,
+      "volume": 251.6,
+      "volume_usd": 4069069.44,
       "open_interest": 451.8
     },
     {
@@ -111,8 +111,8 @@
     },
     {
       "instrument_name": "BTC-25DEC26-108000-C",
-      "volume": 11.5,
-      "volume_usd": 10893.49,
+      "volume": 11.6,
+      "volume_usd": 10999.01,
       "open_interest": 210.7
     },
     {
@@ -123,8 +123,8 @@
     },
     {
       "instrument_name": "BTC-25SEP26-85000-C",
-      "volume": 2914.9,
-      "volume_usd": 794577.33,
+      "volume": 2911.9,
+      "volume_usd": 790459.74,
       "open_interest": 4321.8
     },
     {
@@ -165,21 +165,15 @@
     },
     {
       "instrument_name": "BTC-9OCT26-75000-P",
-      "volume": 601.0,
-      "volume_usd": 158015.32,
-      "open_interest": 1031.0
+      "volume": 606.0,
+      "volume_usd": 159236.57,
+      "open_interest": 1034.0
     },
     {
       "instrument_name": "BTC-30OCT26-95000-C",
-      "volume": 16.6,
-      "volume_usd": 11482.15,
+      "volume": 16.5,
+      "volume_usd": 11397.56,
       "open_interest": 23294.8
-    },
-    {
-      "instrument_name": "BTC-26MAR27-160000-C",
-      "volume": 10.1,
-      "volume_usd": 4324.86,
-      "open_interest": 1034.3
     },
     {
       "instrument_name": "BTC-25SEP26-260000-C",
@@ -188,16 +182,22 @@
       "open_interest": 293.2
     },
     {
-      "instrument_name": "BTC-30OCT26-50000-C",
-      "volume": 0.0,
-      "volume_usd": 0.0,
-      "open_interest": 1.1
+      "instrument_name": "BTC-26MAR27-160000-C",
+      "volume": 10.1,
+      "volume_usd": 4324.86,
+      "open_interest": 1034.3
     },
     {
       "instrument_name": "BTC-2OCT26-80000-C",
       "volume": 0.0,
       "volume_usd": 0.0,
       "open_interest": 869.0
+    },
+    {
+      "instrument_name": "BTC-30OCT26-50000-C",
+      "volume": 0.0,
+      "volume_usd": 0.0,
+      "open_interest": 1.1
     },
     {
       "instrument_name": "BTC-30OCT26-96000-C",
@@ -207,21 +207,21 @@
     },
     {
       "instrument_name": "BTC-16OCT26-84000-P",
-      "volume": 0.2,
-      "volume_usd": 560.84,
-      "open_interest": 0.2
+      "volume": 25.2,
+      "volume_usd": 63754.19,
+      "open_interest": 25.2
+    },
+    {
+      "instrument_name": "BTC-2OCT26-90000-C",
+      "volume": 95.3,
+      "volume_usd": 17624.02,
+      "open_interest": 747.0
     },
     {
       "instrument_name": "BTC-25DEC26-190000-P",
       "volume": 0.0,
       "volume_usd": 0.0,
       "open_interest": 0.0
-    },
-    {
-      "instrument_name": "BTC-2OCT26-90000-C",
-      "volume": 94.4,
-      "volume_usd": 17461.43,
-      "open_interest": 748.0
     },
     {
       "instrument_name": "BTC-25DEC26-160000-P",
@@ -315,9 +315,9 @@
     },
     {
       "instrument_name": "BTC-28SEP26-86000-C",
-      "volume": 271.6,
-      "volume_usd": 75532.54,
-      "open_interest": 266.4
+      "volume": 293.7,
+      "volume_usd": 82236.85,
+      "open_interest": 288.4
     },
     {
       "instrument_name": "BTC-2OCT26-84000-C",
@@ -381,8 +381,8 @@
     },
     {
       "instrument_name": "BTC-25SEP26-72000-P",
-      "volume": 90.2,
-      "volume_usd": 760.95,
+      "volume": 87.1,
+      "volume_usd": 734.73,
       "open_interest": 2696.8
     },
     {
@@ -404,16 +404,16 @@
       "open_interest": 1.0
     },
     {
-      "instrument_name": "BTC-26MAR27-55000-C",
-      "volume": 0.0,
-      "volume_usd": 0.0,
-      "open_interest": 29.5
-    },
-    {
       "instrument_name": "BTC-25JUN27-65000-P",
       "volume": 7.0,
       "volume_usd": 21523.27,
       "open_interest": 45.3
+    },
+    {
+      "instrument_name": "BTC-26MAR27-55000-C",
+      "volume": 0.0,
+      "volume_usd": 0.0,
+      "open_interest": 29.5
     },
     {
       "instrument_name": "BTC-26MAR27-62000-C",
@@ -453,8 +453,8 @@
     },
     {
       "instrument_name": "BTC-30OCT26-84000-P",
-      "volume": 117.5,
-      "volume_usd": 386111.12,
+      "volume": 117.3,
+      "volume_usd": 385452.42,
       "open_interest": 490.7
     },
     {
@@ -501,9 +501,9 @@
     },
     {
       "instrument_name": "BTC-26SEP26-82000-P",
-      "volume": 69.8,
-      "volume_usd": 22381.93,
-      "open_interest": 89.4
+      "volume": 74.4,
+      "volume_usd": 22963.96,
+      "open_interest": 93.1
     },
     {
       "instrument_name": "BTC-25SEP26-74000-C",
@@ -525,9 +525,9 @@
     },
     {
       "instrument_name": "BTC-25DEC26-84000-C",
-      "volume": 25.0,
-      "volume_usd": 161514.55,
-      "open_interest": 1242.8
+      "volume": 37.5,
+      "volume_usd": 248590.81,
+      "open_interest": 1255.3
     },
     {
       "instrument_name": "BTC-2OCT26-73000-P",
@@ -549,14 +549,14 @@
     },
     {
       "instrument_name": "BTC-27SEP26-84500-C",
-      "volume": 9.7,
-      "volume_usd": 6957.94,
-      "open_interest": 9.3
+      "volume": 92.6,
+      "volume_usd": 60775.12,
+      "open_interest": 91.7
     },
     {
       "instrument_name": "BTC-25DEC26-104000-C",
-      "volume": 1.1,
-      "volume_usd": 1477.03,
+      "volume": 1.2,
+      "volume_usd": 1620.27,
       "open_interest": 157.6
     },
     {
@@ -597,15 +597,15 @@
     },
     {
       "instrument_name": "BTC-26SEP26-88500-C",
-      "volume": 12.8,
-      "volume_usd": 809.57,
+      "volume": 13.4,
+      "volume_usd": 824.73,
       "open_interest": 12.1
     },
     {
       "instrument_name": "BTC-27SEP26-90000-C",
-      "volume": 0.7,
-      "volume_usd": 13.42,
-      "open_interest": 10.4
+      "volume": 20.2,
+      "volume_usd": 341.99,
+      "open_interest": 29.4
     },
     {
       "instrument_name": "BTC-9OCT26-81000-P",
@@ -639,9 +639,9 @@
     },
     {
       "instrument_name": "BTC-25SEP26-82000-P",
-      "volume": 1616.3,
-      "volume_usd": 436789.76,
-      "open_interest": 1980.3
+      "volume": 1613.5,
+      "volume_usd": 436197.45,
+      "open_interest": 1979.4
     },
     {
       "instrument_name": "BTC-26MAR27-112000-P",
@@ -711,9 +711,9 @@
     },
     {
       "instrument_name": "BTC-27SEP26-81000-P",
-      "volume": 45.3,
-      "volume_usd": 7514.18,
-      "open_interest": 55.4
+      "volume": 47.3,
+      "volume_usd": 7682.89,
+      "open_interest": 57.4
     },
     {
       "instrument_name": "BTC-2OCT26-100000-C",
@@ -818,27 +818,27 @@
       "open_interest": 0.0
     },
     {
-      "instrument_name": "BTC-25DEC26-70000-P",
-      "volume": 62.3,
-      "volume_usd": 87564.03,
-      "open_interest": 1534.9
-    },
-    {
       "instrument_name": "BTC-30OCT26-58000-C",
       "volume": 0.0,
       "volume_usd": 0.0,
       "open_interest": 0.0
     },
     {
+      "instrument_name": "BTC-25DEC26-70000-P",
+      "volume": 62.3,
+      "volume_usd": 87564.03,
+      "open_interest": 1534.9
+    },
+    {
       "instrument_name": "BTC-30OCT26-90000-C",
-      "volume": 4258.4,
-      "volume_usd": 7300658.75,
-      "open_interest": 19624.6
+      "volume": 4259.0,
+      "volume_usd": 7301476.88,
+      "open_interest": 19625.7
     },
     {
       "instrument_name": "BTC-27NOV26-98000-C",
-      "volume": 15.2,
-      "volume_usd": 20454.4,
+      "volume": 9.2,
+      "volume_usd": 11840.93,
       "open_interest": 687.4
     },
     {
@@ -860,16 +860,16 @@
       "open_interest": 16.5
     },
     {
-      "instrument_name": "BTC-25SEP26-140000-C",
-      "volume": 0.0,
-      "volume_usd": 0.0,
-      "open_interest": 1208.1
-    },
-    {
       "instrument_name": "BTC-30OCT26-94000-P",
       "volume": 0.0,
       "volume_usd": 0.0,
       "open_interest": 0.1
+    },
+    {
+      "instrument_name": "BTC-25SEP26-140000-C",
+      "volume": 0.0,
+      "volume_usd": 0.0,
+      "open_interest": 1208.1
     },
     {
       "instrument_name": "BTC-27SEP26-83500-C",
@@ -939,8 +939,8 @@
     },
     {
       "instrument_name": "BTC-25SEP26-83500-P",
-      "volume": 121.5,
-      "volume_usd": 61569.67,
+      "volume": 120.8,
+      "volume_usd": 60983.13,
       "open_interest": 100.2
     },
     {
@@ -1022,16 +1022,16 @@
       "open_interest": 1098.8
     },
     {
+      "instrument_name": "BTC-25SEP26-77000-C",
+      "volume": 102.6,
+      "volume_usd": 748919.2,
+      "open_interest": 407.7
+    },
+    {
       "instrument_name": "BTC-25SEP26-175000-P",
       "volume": 0.0,
       "volume_usd": 0.0,
       "open_interest": 0.2
-    },
-    {
-      "instrument_name": "BTC-25SEP26-77000-C",
-      "volume": 102.5,
-      "volume_usd": 748185.75,
-      "open_interest": 407.7
     },
     {
       "instrument_name": "BTC-25DEC26-56000-P",
@@ -1041,15 +1041,15 @@
     },
     {
       "instrument_name": "BTC-25SEP26-75000-P",
-      "volume": 179.3,
-      "volume_usd": 3724.18,
+      "volume": 152.4,
+      "volume_usd": 3042.6,
       "open_interest": 4252.9
     },
     {
       "instrument_name": "BTC-28SEP26-93000-C",
-      "volume": 0.0,
-      "volume_usd": 0.0,
-      "open_interest": 0.0
+      "volume": 0.1,
+      "volume_usd": 0.84,
+      "open_interest": 0.1
     },
     {
       "instrument_name": "BTC-26SEP26-76000-P",
@@ -1083,8 +1083,8 @@
     },
     {
       "instrument_name": "BTC-30OCT26-106000-C",
-      "volume": 5.0,
-      "volume_usd": 845.52,
+      "volume": 0.1,
+      "volume_usd": 16.83,
       "open_interest": 30.1
     },
     {
@@ -1167,9 +1167,9 @@
     },
     {
       "instrument_name": "BTC-2OCT26-77000-P",
-      "volume": 0.1,
-      "volume_usd": 21.64,
-      "open_interest": 228.4
+      "volume": 0.8,
+      "volume_usd": 127.76,
+      "open_interest": 229.1
     },
     {
       "instrument_name": "BTC-16OCT26-82000-C",
@@ -1196,27 +1196,27 @@
       "open_interest": 0.0
     },
     {
-      "instrument_name": "BTC-26MAR27-45000-P",
-      "volume": 7.7,
-      "volume_usd": 3272.33,
-      "open_interest": 251.5
-    },
-    {
       "instrument_name": "BTC-30OCT26-95000-P",
       "volume": 1.0,
       "volume_usd": 10729.61,
       "open_interest": 201.2
     },
     {
+      "instrument_name": "BTC-26MAR27-45000-P",
+      "volume": 7.7,
+      "volume_usd": 3272.33,
+      "open_interest": 251.5
+    },
+    {
       "instrument_name": "BTC-27NOV26-108000-C",
-      "volume": 0.0,
-      "volume_usd": 0.0,
+      "volume": 0.1,
+      "volume_usd": 50.57,
       "open_interest": 97.7
     },
     {
       "instrument_name": "BTC-27NOV26-83000-C",
-      "volume": 2.6,
-      "volume_usd": 15969.6,
+      "volume": 5.8,
+      "volume_usd": 36099.29,
       "open_interest": 88.4
     },
     {
@@ -1239,9 +1239,9 @@
     },
     {
       "instrument_name": "BTC-27SEP26-85000-P",
-      "volume": 7.6,
-      "volume_usd": 9810.17,
-      "open_interest": 4.0
+      "volume": 7.7,
+      "volume_usd": 9923.92,
+      "open_interest": 4.1
     },
     {
       "instrument_name": "BTC-27NOV26-104000-C",
@@ -1251,8 +1251,8 @@
     },
     {
       "instrument_name": "BTC-9OCT26-68000-P",
-      "volume": 0.3,
-      "volume_usd": 26.11,
+      "volume": 0.2,
+      "volume_usd": 18.5,
       "open_interest": 460.6
     },
     {
@@ -1281,9 +1281,9 @@
     },
     {
       "instrument_name": "BTC-27SEP26-83500-P",
-      "volume": 57.5,
-      "volume_usd": 52322.14,
-      "open_interest": 59.4
+      "volume": 57.6,
+      "volume_usd": 52364.29,
+      "open_interest": 59.5
     },
     {
       "instrument_name": "BTC-26SEP26-93000-C",
@@ -1311,9 +1311,9 @@
     },
     {
       "instrument_name": "BTC-26SEP26-88000-C",
-      "volume": 3.2,
-      "volume_usd": 214.35,
-      "open_interest": 29.7
+      "volume": 4.2,
+      "volume_usd": 248.08,
+      "open_interest": 30.5
     },
     {
       "instrument_name": "BTC-26MAR27-105000-C",
@@ -1359,9 +1359,9 @@
     },
     {
       "instrument_name": "BTC-9OCT26-100000-C",
-      "volume": 9.9,
-      "volume_usd": 577.72,
-      "open_interest": 126.2
+      "volume": 10.3,
+      "volume_usd": 594.61,
+      "open_interest": 126.6
     },
     {
       "instrument_name": "BTC-24SEP27-200000-P",
@@ -1587,8 +1587,8 @@
     },
     {
       "instrument_name": "BTC-30OCT26-82000-P",
-      "volume": 78.5,
-      "volume_usd": 198921.24,
+      "volume": 76.5,
+      "volume_usd": 194103.11,
       "open_interest": 181.4
     },
     {
@@ -1640,16 +1640,16 @@
       "open_interest": 0.0
     },
     {
-      "instrument_name": "BTC-25DEC26-210000-P",
-      "volume": 0.0,
-      "volume_usd": 0.0,
-      "open_interest": 0.0
-    },
-    {
       "instrument_name": "BTC-30OCT26-54000-P",
       "volume": 9.1,
       "volume_usd": 761.47,
       "open_interest": 189.7
+    },
+    {
+      "instrument_name": "BTC-25DEC26-210000-P",
+      "volume": 0.0,
+      "volume_usd": 0.0,
+      "open_interest": 0.0
     },
     {
       "instrument_name": "BTC-25SEP26-35000-P",
@@ -1671,8 +1671,8 @@
     },
     {
       "instrument_name": "BTC-9OCT26-70000-P",
-      "volume": 20.5,
-      "volume_usd": 2572.79,
+      "volume": 20.4,
+      "volume_usd": 2562.65,
       "open_interest": 114.8
     },
     {
@@ -1689,9 +1689,9 @@
     },
     {
       "instrument_name": "BTC-25SEP26-81000-P",
-      "volume": 2295.7,
-      "volume_usd": 270580.15,
-      "open_interest": 3460.4
+      "volume": 2145.8,
+      "volume_usd": 249591.74,
+      "open_interest": 3461.4
     },
     {
       "instrument_name": "BTC-25DEC26-105000-P",
@@ -1737,8 +1737,8 @@
     },
     {
       "instrument_name": "BTC-30OCT26-64000-P",
-      "volume": 1.3,
-      "volume_usd": 265.94,
+      "volume": 1.7,
+      "volume_usd": 333.36,
       "open_interest": 581.1
     },
     {
@@ -1748,16 +1748,16 @@
       "open_interest": 1170.2
     },
     {
-      "instrument_name": "BTC-26MAR27-60000-C",
-      "volume": 0.1,
-      "volume_usd": 2611.36,
-      "open_interest": 647.9
-    },
-    {
       "instrument_name": "BTC-25DEC26-170000-P",
       "volume": 0.0,
       "volume_usd": 0.0,
       "open_interest": 0.1
+    },
+    {
+      "instrument_name": "BTC-26MAR27-60000-C",
+      "volume": 0.1,
+      "volume_usd": 2611.36,
+      "open_interest": 647.9
     },
     {
       "instrument_name": "BTC-27SEP26-89000-P",
@@ -1821,8 +1821,8 @@
     },
     {
       "instrument_name": "BTC-25DEC26-40000-P",
-      "volume": 1577.8,
-      "volume_usd": 172395.43,
+      "volume": 1577.7,
+      "volume_usd": 172384.45,
       "open_interest": 4861.9
     },
     {
@@ -1845,8 +1845,8 @@
     },
     {
       "instrument_name": "BTC-25DEC26-135000-C",
-      "volume": 3.9,
-      "volume_usd": 811.35,
+      "volume": 1.9,
+      "volume_usd": 372.21,
       "open_interest": 1427.0
     },
     {
@@ -1862,16 +1862,16 @@
       "open_interest": 63.0
     },
     {
-      "instrument_name": "BTC-25DEC26-104000-P",
-      "volume": 0.0,
-      "volume_usd": 0.0,
-      "open_interest": 0.3
-    },
-    {
       "instrument_name": "BTC-30OCT26-76000-C",
       "volume": 0.8,
       "volume_usd": 6895.41,
       "open_interest": 558.6
+    },
+    {
+      "instrument_name": "BTC-25DEC26-104000-P",
+      "volume": 0.0,
+      "volume_usd": 0.0,
+      "open_interest": 0.3
     },
     {
       "instrument_name": "BTC-24SEP27-120000-C",
@@ -1911,9 +1911,9 @@
     },
     {
       "instrument_name": "BTC-25DEC26-84000-P",
-      "volume": 7.3,
-      "volume_usd": 43912.6,
-      "open_interest": 132.5
+      "volume": 19.8,
+      "volume_usd": 114438.05,
+      "open_interest": 145.0
     },
     {
       "instrument_name": "BTC-30OCT26-70000-C",
@@ -1929,15 +1929,15 @@
     },
     {
       "instrument_name": "BTC-25SEP26-84000-P",
-      "volume": 685.8,
-      "volume_usd": 409443.29,
+      "volume": 685.9,
+      "volume_usd": 409460.18,
       "open_interest": 1663.0
     },
     {
       "instrument_name": "BTC-27NOV26-120000-C",
-      "volume": 0.2,
-      "volume_usd": 33.67,
-      "open_interest": 106.5
+      "volume": 0.3,
+      "volume_usd": 53.05,
+      "open_interest": 106.4
     },
     {
       "instrument_name": "BTC-26MAR27-180000-P",
@@ -1982,16 +1982,16 @@
       "open_interest": 0.0
     },
     {
+      "instrument_name": "BTC-2OCT26-79000-P",
+      "volume": 198.7,
+      "volume_usd": 65620.96,
+      "open_interest": 834.9
+    },
+    {
       "instrument_name": "BTC-25JUN27-110000-P",
       "volume": 0.0,
       "volume_usd": 0.0,
       "open_interest": 5.3
-    },
-    {
-      "instrument_name": "BTC-2OCT26-79000-P",
-      "volume": 98.7,
-      "volume_usd": 40323.92,
-      "open_interest": 834.9
     },
     {
       "instrument_name": "BTC-25SEP26-150000-C",
@@ -2037,15 +2037,15 @@
     },
     {
       "instrument_name": "BTC-27NOV26-110000-C",
-      "volume": 5.0,
-      "volume_usd": 2238.8,
-      "open_interest": 249.3
+      "volume": 5.1,
+      "volume_usd": 2280.94,
+      "open_interest": 249.2
     },
     {
       "instrument_name": "BTC-16OCT26-92000-C",
-      "volume": 21.4,
-      "volume_usd": 14336.76,
-      "open_interest": 21.4
+      "volume": 21.5,
+      "volume_usd": 14395.72,
+      "open_interest": 21.5
     },
     {
       "instrument_name": "BTC-25DEC26-130000-C",
@@ -2073,8 +2073,8 @@
     },
     {
       "instrument_name": "BTC-30OCT26-87000-C",
-      "volume": 64.4,
-      "volume_usd": 164857.79,
+      "volume": 61.4,
+      "volume_usd": 156417.32,
       "open_interest": 917.4
     },
     {
@@ -2157,8 +2157,8 @@
     },
     {
       "instrument_name": "BTC-26MAR27-65000-P",
-      "volume": 25.4,
-      "volume_usd": 51880.44,
+      "volume": 5.4,
+      "volume_usd": 11297.27,
       "open_interest": 864.9
     },
     {
@@ -2211,21 +2211,15 @@
     },
     {
       "instrument_name": "BTC-26MAR27-90000-C",
-      "volume": 31.6,
-      "volume_usd": 232180.81,
+      "volume": 32.1,
+      "volume_usd": 236018.59,
       "open_interest": 721.9
     },
     {
       "instrument_name": "BTC-25SEP26-79000-P",
-      "volume": 249.8,
-      "volume_usd": 13390.05,
-      "open_interest": 2854.1
-    },
-    {
-      "instrument_name": "BTC-25SEP26-95000-P",
-      "volume": 1.3,
-      "volume_usd": 13630.0,
-      "open_interest": 147.9
+      "volume": 261.9,
+      "volume_usd": 13492.05,
+      "open_interest": 2857.4
     },
     {
       "instrument_name": "BTC-25DEC26-86000-C",
@@ -2234,9 +2228,15 @@
       "open_interest": 513.9
     },
     {
+      "instrument_name": "BTC-25SEP26-95000-P",
+      "volume": 1.3,
+      "volume_usd": 13630.0,
+      "open_interest": 147.9
+    },
+    {
       "instrument_name": "BTC-27NOV26-84000-C",
-      "volume": 0.1,
-      "volume_usd": 583.05,
+      "volume": 1.7,
+      "volume_usd": 9684.72,
       "open_interest": 70.5
     },
     {
@@ -2301,8 +2301,8 @@
     },
     {
       "instrument_name": "BTC-27SEP26-80000-P",
-      "volume": 89.2,
-      "volume_usd": 11089.55,
+      "volume": 80.6,
+      "volume_usd": 10144.69,
       "open_interest": 82.4
     },
     {
@@ -2378,21 +2378,21 @@
       "open_interest": 684.1
     },
     {
-      "instrument_name": "BTC-26MAR27-98000-P",
-      "volume": 0.1,
-      "volume_usd": 1717.84,
-      "open_interest": 1.6
-    },
-    {
       "instrument_name": "BTC-25DEC26-115000-P",
       "volume": 0.0,
       "volume_usd": 0.0,
       "open_interest": 5.0
     },
     {
+      "instrument_name": "BTC-26MAR27-98000-P",
+      "volume": 0.1,
+      "volume_usd": 1717.84,
+      "open_interest": 1.6
+    },
+    {
       "instrument_name": "BTC-2OCT26-85000-C",
-      "volume": 519.5,
-      "volume_usd": 661853.0,
+      "volume": 469.6,
+      "volume_usd": 588075.13,
       "open_interest": 1014.8
     },
     {
@@ -2439,9 +2439,9 @@
     },
     {
       "instrument_name": "BTC-16OCT26-85000-C",
-      "volume": 0.3,
-      "volume_usd": 811.78,
-      "open_interest": 0.3
+      "volume": 25.3,
+      "volume_usd": 64426.41,
+      "open_interest": 25.3
     },
     {
       "instrument_name": "BTC-25SEP26-65000-P",
@@ -2474,16 +2474,16 @@
       "open_interest": 0.6
     },
     {
-      "instrument_name": "BTC-25SEP26-80000-P",
-      "volume": 999.6,
-      "volume_usd": 75522.91,
-      "open_interest": 3747.8
-    },
-    {
       "instrument_name": "BTC-30OCT26-104000-P",
       "volume": 0.0,
       "volume_usd": 0.0,
       "open_interest": 0.0
+    },
+    {
+      "instrument_name": "BTC-25SEP26-80000-P",
+      "volume": 1058.4,
+      "volume_usd": 76477.01,
+      "open_interest": 3748.8
     },
     {
       "instrument_name": "BTC-24SEP27-84000-P",
@@ -2649,15 +2649,15 @@
     },
     {
       "instrument_name": "BTC-25DEC26-45000-P",
-      "volume": 22.0,
-      "volume_usd": 3655.35,
+      "volume": 21.8,
+      "volume_usd": 3624.94,
       "open_interest": 2822.6
     },
     {
       "instrument_name": "BTC-2OCT26-89000-C",
-      "volume": 47.1,
-      "volume_usd": 12932.92,
-      "open_interest": 96.6
+      "volume": 43.1,
+      "volume_usd": 11255.19,
+      "open_interest": 96.2
     },
     {
       "instrument_name": "BTC-30OCT26-67000-P",
@@ -2775,8 +2775,8 @@
     },
     {
       "instrument_name": "BTC-2OCT26-85000-P",
-      "volume": 618.2,
-      "volume_usd": 1172749.18,
+      "volume": 318.2,
+      "volume_usd": 616391.28,
       "open_interest": 837.0
     },
     {
@@ -2877,8 +2877,8 @@
     },
     {
       "instrument_name": "BTC-2OCT26-80000-P",
-      "volume": 246.6,
-      "volume_usd": 111471.89,
+      "volume": 254.1,
+      "volume_usd": 114063.94,
       "open_interest": 1032.5
     },
     {
@@ -2937,9 +2937,9 @@
     },
     {
       "instrument_name": "BTC-25SEP26-85500-C",
-      "volume": 205.1,
-      "volume_usd": 35242.1,
-      "open_interest": 133.3
+      "volume": 212.7,
+      "volume_usd": 35664.82,
+      "open_interest": 140.5
     },
     {
       "instrument_name": "BTC-25JUN27-140000-C",
@@ -2961,9 +2961,9 @@
     },
     {
       "instrument_name": "BTC-27SEP26-83000-P",
-      "volume": 83.0,
-      "volume_usd": 48599.83,
-      "open_interest": 83.6
+      "volume": 84.0,
+      "volume_usd": 48852.9,
+      "open_interest": 82.6
     },
     {
       "instrument_name": "BTC-25SEP26-190000-C",
@@ -3141,8 +3141,8 @@
     },
     {
       "instrument_name": "BTC-30OCT26-86000-P",
-      "volume": 0.5,
-      "volume_usd": 2285.25,
+      "volume": 5.0,
+      "volume_usd": 22010.46,
       "open_interest": 175.2
     },
     {
@@ -3176,16 +3176,16 @@
       "open_interest": 1526.4
     },
     {
-      "instrument_name": "BTC-27NOV26-105000-C",
-      "volume": 2.0,
-      "volume_usd": 1345.69,
-      "open_interest": 21.2
-    },
-    {
       "instrument_name": "BTC-25SEP26-95000-C",
       "volume": 1.2,
       "volume_usd": 10.03,
       "open_interest": 4948.3
+    },
+    {
+      "instrument_name": "BTC-27NOV26-105000-C",
+      "volume": 2.0,
+      "volume_usd": 1345.69,
+      "open_interest": 21.2
     },
     {
       "instrument_name": "BTC-27NOV26-94000-C",
@@ -3356,16 +3356,16 @@
       "open_interest": 63.9
     },
     {
-      "instrument_name": "BTC-25JUN27-95000-C",
-      "volume": 5.4,
-      "volume_usd": 44455.51,
-      "open_interest": 56.0
-    },
-    {
       "instrument_name": "BTC-25JUN27-65000-C",
       "volume": 1.7,
       "volume_usd": 42316.69,
       "open_interest": 9.1
+    },
+    {
+      "instrument_name": "BTC-25JUN27-95000-C",
+      "volume": 5.4,
+      "volume_usd": 44455.51,
+      "open_interest": 56.0
     },
     {
       "instrument_name": "BTC-9OCT26-65000-P",
@@ -3435,8 +3435,8 @@
     },
     {
       "instrument_name": "BTC-25SEP26-86000-C",
-      "volume": 759.0,
-      "volume_usd": 89618.1,
+      "volume": 809.0,
+      "volume_usd": 90040.28,
       "open_interest": 1684.7
     },
     {
@@ -3465,8 +3465,8 @@
     },
     {
       "instrument_name": "BTC-25DEC26-80000-P",
-      "volume": 65.6,
-      "volume_usd": 269331.01,
+      "volume": 59.6,
+      "volume_usd": 246015.76,
       "open_interest": 1672.2
     },
     {
@@ -3495,9 +3495,9 @@
     },
     {
       "instrument_name": "BTC-9OCT26-95000-C",
-      "volume": 10.7,
-      "volume_usd": 1489.52,
-      "open_interest": 475.6
+      "volume": 15.7,
+      "volume_usd": 2243.3,
+      "open_interest": 477.0
     },
     {
       "instrument_name": "BTC-25JUN27-86000-C",
@@ -3626,16 +3626,16 @@
       "open_interest": 0.2
     },
     {
-      "instrument_name": "BTC-27NOV26-110000-P",
-      "volume": 0.0,
-      "volume_usd": 0.0,
-      "open_interest": 0.0
-    },
-    {
       "instrument_name": "BTC-2OCT26-95000-C",
       "volume": 216.7,
       "volume_usd": 7169.64,
       "open_interest": 648.7
+    },
+    {
+      "instrument_name": "BTC-27NOV26-110000-P",
+      "volume": 0.0,
+      "volume_usd": 0.0,
+      "open_interest": 0.0
     },
     {
       "instrument_name": "BTC-25JUN27-76000-C",
@@ -3645,9 +3645,9 @@
     },
     {
       "instrument_name": "BTC-25SEP26-84500-P",
-      "volume": 21.0,
-      "volume_usd": 13287.85,
-      "open_interest": 73.6
+      "volume": 25.2,
+      "volume_usd": 14830.49,
+      "open_interest": 76.6
     },
     {
       "instrument_name": "BTC-25DEC26-35000-P",
@@ -3782,28 +3782,28 @@
       "open_interest": 0.0
     },
     {
-      "instrument_name": "BTC-26MAR27-76000-P",
-      "volume": 34.6,
-      "volume_usd": 162554.41,
-      "open_interest": 572.1
-    },
-    {
       "instrument_name": "BTC-30OCT26-98000-P",
       "volume": 0.0,
       "volume_usd": 0.0,
       "open_interest": 27.0
     },
     {
-      "instrument_name": "BTC-25SEP26-76000-C",
-      "volume": 834.1,
-      "volume_usd": 6709801.53,
-      "open_interest": 1421.0
+      "instrument_name": "BTC-26MAR27-76000-P",
+      "volume": 31.7,
+      "volume_usd": 149319.19,
+      "open_interest": 572.1
     },
     {
       "instrument_name": "BTC-30OCT26-64000-C",
       "volume": 162.5,
       "volume_usd": 3289528.29,
       "open_interest": 416.6
+    },
+    {
+      "instrument_name": "BTC-25SEP26-76000-C",
+      "volume": 834.1,
+      "volume_usd": 6709801.53,
+      "open_interest": 1421.0
     },
     {
       "instrument_name": "BTC-9OCT26-94000-C",
@@ -3878,16 +3878,16 @@
       "open_interest": 624.3
     },
     {
-      "instrument_name": "BTC-25DEC26-30000-C",
-      "volume": 6.0,
-      "volume_usd": 322193.27,
-      "open_interest": 300.7
-    },
-    {
       "instrument_name": "BTC-2OCT26-72000-C",
       "volume": 0.0,
       "volume_usd": 0.0,
       "open_interest": 2.1
+    },
+    {
+      "instrument_name": "BTC-25DEC26-30000-C",
+      "volume": 6.0,
+      "volume_usd": 322193.27,
+      "open_interest": 300.7
     },
     {
       "instrument_name": "BTC-27NOV26-75000-P",
@@ -3968,16 +3968,16 @@
       "open_interest": 0.0
     },
     {
-      "instrument_name": "BTC-25SEP26-45000-C",
-      "volume": 0.0,
-      "volume_usd": 0.0,
-      "open_interest": 164.9
-    },
-    {
       "instrument_name": "BTC-25JUN27-96000-C",
       "volume": 0.0,
       "volume_usd": 0.0,
       "open_interest": 151.5
+    },
+    {
+      "instrument_name": "BTC-25SEP26-45000-C",
+      "volume": 0.0,
+      "volume_usd": 0.0,
+      "open_interest": 164.9
     },
     {
       "instrument_name": "BTC-28SEP26-80000-P",
@@ -4070,16 +4070,16 @@
       "open_interest": 34.4
     },
     {
-      "instrument_name": "BTC-25JUN27-100000-P",
-      "volume": 0.0,
-      "volume_usd": 0.0,
-      "open_interest": 2.2
-    },
-    {
       "instrument_name": "BTC-25SEP26-155000-C",
       "volume": 0.0,
       "volume_usd": 0.0,
       "open_interest": 378.0
+    },
+    {
+      "instrument_name": "BTC-25JUN27-100000-P",
+      "volume": 0.0,
+      "volume_usd": 0.0,
+      "open_interest": 2.2
     },
     {
       "instrument_name": "BTC-16OCT26-86000-C",
@@ -4167,9 +4167,9 @@
     },
     {
       "instrument_name": "BTC-24SEP27-70000-C",
-      "volume": 2.5,
-      "volume_usd": 55892.75,
-      "open_interest": 2.5
+      "volume": 2.6,
+      "volume_usd": 58195.77,
+      "open_interest": 2.6
     },
     {
       "instrument_name": "BTC-30OCT26-70000-P",
@@ -4304,16 +4304,16 @@
       "open_interest": 0.0
     },
     {
-      "instrument_name": "BTC-27NOV26-60000-C",
-      "volume": 0.0,
-      "volume_usd": 0.0,
-      "open_interest": 0.2
-    },
-    {
       "instrument_name": "BTC-25JUN27-66000-C",
       "volume": 0.2,
       "volume_usd": 4633.93,
       "open_interest": 25.6
+    },
+    {
+      "instrument_name": "BTC-27NOV26-60000-C",
+      "volume": 0.0,
+      "volume_usd": 0.0,
+      "open_interest": 0.2
     },
     {
       "instrument_name": "BTC-25JUN27-66000-P",
@@ -4323,9 +4323,9 @@
     },
     {
       "instrument_name": "BTC-27SEP26-82500-P",
-      "volume": 9.5,
-      "volume_usd": 2891.98,
-      "open_interest": 14.0
+      "volume": 17.5,
+      "volume_usd": 4428.3,
+      "open_interest": 10.8
     },
     {
       "instrument_name": "BTC-25DEC26-94000-C",
@@ -4365,9 +4365,9 @@
     },
     {
       "instrument_name": "BTC-30OCT26-105000-C",
-      "volume": 0.2,
-      "volume_usd": 36.07,
-      "open_interest": 1158.5
+      "volume": 0.6,
+      "volume_usd": 106.86,
+      "open_interest": 1158.9
     },
     {
       "instrument_name": "BTC-27SEP26-86000-C",
@@ -4599,8 +4599,8 @@
     },
     {
       "instrument_name": "BTC-25SEP26-94000-C",
-      "volume": 1.6,
-      "volume_usd": 13.54,
+      "volume": 1.0,
+      "volume_usd": 8.46,
       "open_interest": 1146.0
     },
     {
@@ -4635,8 +4635,8 @@
     },
     {
       "instrument_name": "BTC-25JUN27-170000-C",
-      "volume": 2.2,
-      "volume_usd": 1939.95,
+      "volume": 2.3,
+      "volume_usd": 2024.23,
       "open_interest": 153.0
     },
     {
@@ -4677,8 +4677,8 @@
     },
     {
       "instrument_name": "BTC-26SEP26-82500-P",
-      "volume": 40.1,
-      "volume_usd": 10264.06,
+      "volume": 40.2,
+      "volume_usd": 10283.43,
       "open_interest": 40.2
     },
     {
@@ -4773,9 +4773,9 @@
     },
     {
       "instrument_name": "BTC-2OCT26-84000-P",
-      "volume": 478.7,
-      "volume_usd": 788562.4,
-      "open_interest": 620.5
+      "volume": 395.9,
+      "volume_usd": 673895.94,
+      "open_interest": 619.5
     },
     {
       "instrument_name": "BTC-25JUN27-52000-P",
@@ -4839,9 +4839,9 @@
     },
     {
       "instrument_name": "BTC-25SEP26-87000-C",
-      "volume": 490.1,
-      "volume_usd": 25876.4,
-      "open_interest": 608.7
+      "volume": 491.1,
+      "volume_usd": 25884.82,
+      "open_interest": 609.7
     },
     {
       "instrument_name": "BTC-25SEP26-89000-C",
@@ -4899,9 +4899,9 @@
     },
     {
       "instrument_name": "BTC-2OCT26-87000-C",
-      "volume": 77.2,
-      "volume_usd": 43255.79,
-      "open_interest": 411.7
+      "volume": 79.1,
+      "volume_usd": 44334.17,
+      "open_interest": 412.7
     },
     {
       "instrument_name": "BTC-16OCT26-84000-C",
@@ -5030,21 +5030,21 @@
       "open_interest": 1446.7
     },
     {
-      "instrument_name": "BTC-27NOV26-81000-C",
-      "volume": 0.1,
-      "volume_usd": 732.05,
-      "open_interest": 162.9
-    },
-    {
       "instrument_name": "BTC-25JUN27-78000-C",
       "volume": 0.0,
       "volume_usd": 0.0,
       "open_interest": 104.4
     },
     {
+      "instrument_name": "BTC-27NOV26-81000-C",
+      "volume": 0.1,
+      "volume_usd": 732.05,
+      "open_interest": 162.9
+    },
+    {
       "instrument_name": "BTC-27SEP26-88500-C",
-      "volume": 11.5,
-      "volume_usd": 739.99,
+      "volume": 11.9,
+      "volume_usd": 750.92,
       "open_interest": 10.2
     },
     {
@@ -5127,9 +5127,9 @@
     },
     {
       "instrument_name": "BTC-26SEP26-83000-P",
-      "volume": 646.7,
-      "volume_usd": 226659.85,
-      "open_interest": 822.2
+      "volume": 650.7,
+      "volume_usd": 227605.37,
+      "open_interest": 823.3
     },
     {
       "instrument_name": "BTC-25SEP26-52000-C",
@@ -5151,9 +5151,9 @@
     },
     {
       "instrument_name": "BTC-27SEP26-84500-P",
-      "volume": 2.8,
-      "volume_usd": 2311.73,
-      "open_interest": 7.2
+      "volume": 5.5,
+      "volume_usd": 4395.82,
+      "open_interest": 9.1
     },
     {
       "instrument_name": "BTC-24SEP27-50000-C",
@@ -5169,8 +5169,8 @@
     },
     {
       "instrument_name": "BTC-26MAR27-66000-P",
-      "volume": 34.0,
-      "volume_usd": 74302.03,
+      "volume": 14.0,
+      "volume_usd": 30339.42,
       "open_interest": 100.4
     },
     {
@@ -5211,9 +5211,9 @@
     },
     {
       "instrument_name": "BTC-25SEP26-77000-P",
-      "volume": 90.1,
-      "volume_usd": 2233.19,
-      "open_interest": 1249.1
+      "volume": 95.2,
+      "volume_usd": 2276.15,
+      "open_interest": 1254.1
     },
     {
       "instrument_name": "BTC-2OCT26-65000-P",
@@ -5283,8 +5283,8 @@
     },
     {
       "instrument_name": "BTC-26MAR27-64000-P",
-      "volume": 15.0,
-      "volume_usd": 28168.14,
+      "volume": 4.0,
+      "volume_usd": 7701.54,
       "open_interest": 125.1
     },
     {
@@ -5325,9 +5325,9 @@
     },
     {
       "instrument_name": "BTC-27SEP26-92000-C",
-      "volume": 1.2,
-      "volume_usd": 10.0,
-      "open_interest": 1.3
+      "volume": 1.3,
+      "volume_usd": 10.85,
+      "open_interest": 1.4
     },
     {
       "instrument_name": "BTC-28SEP26-82500-C",
@@ -5355,8 +5355,8 @@
     },
     {
       "instrument_name": "BTC-30OCT26-104000-C",
-      "volume": 38.5,
-      "volume_usd": 8126.56,
+      "volume": 18.5,
+      "volume_usd": 3729.1,
       "open_interest": 159.7
     },
     {
@@ -5510,16 +5510,16 @@
       "open_interest": 66.8
     },
     {
+      "instrument_name": "BTC-25SEP26-81000-C",
+      "volume": 404.0,
+      "volume_usd": 1377565.08,
+      "open_interest": 2867.6
+    },
+    {
       "instrument_name": "BTC-25DEC26-64000-P",
       "volume": 4.1,
       "volume_usd": 3336.85,
       "open_interest": 389.9
-    },
-    {
-      "instrument_name": "BTC-25SEP26-81000-C",
-      "volume": 398.1,
-      "volume_usd": 1357143.59,
-      "open_interest": 2873.5
     },
     {
       "instrument_name": "BTC-26MAR27-54000-C",
@@ -5558,16 +5558,16 @@
       "open_interest": 2153.2
     },
     {
-      "instrument_name": "BTC-25JUN27-84000-P",
-      "volume": 0.2,
-      "volume_usd": 1943.97,
-      "open_interest": 19.3
-    },
-    {
       "instrument_name": "BTC-26MAR27-120000-P",
       "volume": 0.0,
       "volume_usd": 0.0,
       "open_interest": 9.9
+    },
+    {
+      "instrument_name": "BTC-25JUN27-84000-P",
+      "volume": 0.2,
+      "volume_usd": 1943.97,
+      "open_interest": 19.3
     },
     {
       "instrument_name": "BTC-9OCT26-65000-C",
@@ -5738,16 +5738,16 @@
       "open_interest": 1086.5
     },
     {
+      "instrument_name": "BTC-25SEP26-83000-P",
+      "volume": 674.0,
+      "volume_usd": 217990.3,
+      "open_interest": 1163.1
+    },
+    {
       "instrument_name": "BTC-25SEP26-125000-C",
       "volume": 0.0,
       "volume_usd": 0.0,
       "open_interest": 2382.2
-    },
-    {
-      "instrument_name": "BTC-25SEP26-83000-P",
-      "volume": 663.0,
-      "volume_usd": 217801.37,
-      "open_interest": 1172.5
     },
     {
       "instrument_name": "BTC-30OCT26-82000-C",
@@ -5763,8 +5763,8 @@
     },
     {
       "instrument_name": "BTC-30OCT26-110000-C",
-      "volume": 16.0,
-      "volume_usd": 1752.67,
+      "volume": 11.0,
+      "volume_usd": 1161.3,
       "open_interest": 1191.8
     },
     {
@@ -5823,9 +5823,9 @@
     },
     {
       "instrument_name": "BTC-25SEP26-86000-P",
-      "volume": 225.5,
-      "volume_usd": 389764.88,
-      "open_interest": 931.7
+      "volume": 75.5,
+      "volume_usd": 162522.0,
+      "open_interest": 881.7
     },
     {
       "instrument_name": "BTC-27SEP26-82000-P",
@@ -5841,9 +5841,9 @@
     },
     {
       "instrument_name": "BTC-25DEC26-230000-C",
-      "volume": 5.0,
-      "volume_usd": 83.35,
-      "open_interest": 190.6
+      "volume": 5.1,
+      "volume_usd": 85.04,
+      "open_interest": 190.5
     },
     {
       "instrument_name": "BTC-26SEP26-81500-P",
@@ -5885,7 +5885,7 @@
       "instrument_name": "BTC-24SEP27-60000-P",
       "volume": 18.1,
       "volume_usd": 54873.84,
-      "open_interest": 17.6
+      "open_interest": 17.0
     },
     {
       "instrument_name": "BTC-25DEC26-54000-P",
@@ -5895,8 +5895,8 @@
     },
     {
       "instrument_name": "BTC-26MAR27-78000-P",
-      "volume": 14.0,
-      "volume_usd": 74432.73,
+      "volume": 4.0,
+      "volume_usd": 21634.18,
       "open_interest": 343.6
     },
     {
@@ -6009,8 +6009,8 @@
     },
     {
       "instrument_name": "BTC-25SEP26-82000-C",
-      "volume": 311.1,
-      "volume_usd": 734869.53,
+      "volume": 319.0,
+      "volume_usd": 754308.78,
       "open_interest": 3991.0
     },
     {
@@ -6045,9 +6045,9 @@
     },
     {
       "instrument_name": "BTC-24SEP27-88000-P",
-      "volume": 0.3,
-      "volume_usd": 3849.53,
-      "open_interest": 0.3
+      "volume": 0.4,
+      "volume_usd": 5132.92,
+      "open_interest": 0.4
     },
     {
       "instrument_name": "BTC-26SEP26-86500-C",
@@ -6063,8 +6063,8 @@
     },
     {
       "instrument_name": "BTC-25JUN27-190000-C",
-      "volume": 0.6,
-      "volume_usd": 406.59,
+      "volume": 0.7,
+      "volume_usd": 461.37,
       "open_interest": 67.0
     },
     {
@@ -6129,20 +6129,20 @@
     },
     {
       "instrument_name": "BTC-27NOV26-58000-P",
-      "volume": 1.5,
-      "volume_usd": 388.45,
-      "open_interest": 47.3
+      "volume": 1.7,
+      "volume_usd": 432.27,
+      "open_interest": 47.5
     },
     {
       "instrument_name": "BTC-26MAR27-80000-P",
-      "volume": 0.4,
-      "volume_usd": 2520.61,
-      "open_interest": 226.7
+      "volume": 1.5,
+      "volume_usd": 9342.35,
+      "open_interest": 227.0
     },
     {
       "instrument_name": "BTC-27SEP26-88000-C",
-      "volume": 82.8,
-      "volume_usd": 8298.29,
+      "volume": 83.4,
+      "volume_usd": 8333.69,
       "open_interest": 98.8
     },
     {
@@ -6255,9 +6255,9 @@
     },
     {
       "instrument_name": "BTC-25SEP26-76000-P",
-      "volume": 25.0,
-      "volume_usd": 588.11,
-      "open_interest": 1367.7
+      "volume": 60.9,
+      "volume_usd": 890.49,
+      "open_interest": 1401.8
     },
     {
       "instrument_name": "BTC-27SEP26-78000-P",
@@ -6273,8 +6273,8 @@
     },
     {
       "instrument_name": "BTC-26SEP26-84000-C",
-      "volume": 5.5,
-      "volume_usd": 5941.9,
+      "volume": 5.6,
+      "volume_usd": 6026.2,
       "open_interest": 12.9
     },
     {
@@ -6291,8 +6291,8 @@
     },
     {
       "instrument_name": "BTC-26SEP26-86000-C",
-      "volume": 32.0,
-      "volume_usd": 8830.31,
+      "volume": 31.9,
+      "volume_usd": 8790.56,
       "open_interest": 43.3
     },
     {
@@ -6381,8 +6381,8 @@
     },
     {
       "instrument_name": "BTC-30OCT26-56000-P",
-      "volume": 0.0,
-      "volume_usd": 0.0,
+      "volume": 0.2,
+      "volume_usd": 18.54,
       "open_interest": 468.3
     },
     {
@@ -6447,9 +6447,9 @@
     },
     {
       "instrument_name": "BTC-27SEP26-84000-P",
-      "volume": 24.0,
-      "volume_usd": 26615.22,
-      "open_interest": 24.6
+      "volume": 24.3,
+      "volume_usd": 26779.81,
+      "open_interest": 24.9
     },
     {
       "instrument_name": "BTC-27NOV26-115000-C",
@@ -6459,9 +6459,9 @@
     },
     {
       "instrument_name": "BTC-9OCT26-77000-P",
-      "volume": 112.6,
-      "volume_usd": 51610.1,
-      "open_interest": 158.6
+      "volume": 113.2,
+      "volume_usd": 51812.25,
+      "open_interest": 158.4
     },
     {
       "instrument_name": "BTC-26MAR27-75000-P",
@@ -6470,7 +6470,7 @@
       "open_interest": 16.5
     }
   ],
-  "btc_index_price": 84137.32,
+  "btc_index_price": 84379.6,
   "btc_weekly_ranges": [
     {
       "week_start": "2026-07-20",
@@ -6540,14 +6540,10 @@
       "open": 81762.0,
       "high": 87504.5,
       "low": 81757.5,
-      "close": 84137.32
+      "close": 84379.6
     }
   ],
   "btc_h1_candles": [
-    {
-      "ts_utc": "2026-09-14T22:00:00Z",
-      "close": 78554.0
-    },
     {
       "ts_utc": "2026-09-14T23:00:00Z",
       "close": 78192.5
@@ -7506,7 +7502,11 @@
     },
     {
       "ts_utc": "2026-09-24T22:00:00Z",
-      "close": 84154.0
+      "close": 84271.5
+    },
+    {
+      "ts_utc": "2026-09-24T23:00:00Z",
+      "close": 84388.5
     }
   ]
 }
